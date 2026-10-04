@@ -13,7 +13,7 @@ Use one of these labels in commit messages, file headers, or the relevant README
 - **Reference** — a new illustrative example that is not the project implementation and must not be reported as hardware-tested.
 - **Generated** — produced by a command from a named source artifact; include the command and source hash.
 
-The current `src/industrial_inspection/` utilities are **Curated**. The boundary READMEs are **Curated**. No original vision, firmware, MQTT, dashboard, or maintenance implementation is present in this checkout.
+The current `src/industrial_inspection/` utilities are **Curated**. The boundary READMEs, Kaggle snapshots, and audit tables are **Curated**. The public Kaggle notebook `advanced-ai-driven-quality-control-system` is an **Original** source reference; its exact `.ipynb` export should be preserved before refactoring. The notebook contains original host-side vision, MQTT, dashboard, actuation, and maintenance code, but no Arduino board firmware is present in this checkout.
 
 ## Intake checklist for original files
 

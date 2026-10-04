@@ -7,7 +7,7 @@
 
 This repository is being curated as an evidence-first engineering showcase for a bottle inspection and sorting system. It is organized around the complete product boundary: dataset provenance, computer-vision inference, embedded actuation, MQTT/Dashboard monitoring, predictive-maintenance signals, validation evidence, and known limitations.
 
-> **Evidence boundary.** The public Kaggle dataset is available, but the thesis, benchmark logs, and original implementation files have not yet been added to this checkout. This repository therefore does **not** publish unverified accuracy values, reconstructed Arduino firmware, or claims that the hardware has been tested from this checkout. The curation scaffolding makes those artifacts easy to add without blurring what was measured.
+> **Evidence boundary.** The public Kaggle dataset and the original integration notebook have now been located and audited. The notebook is referenced under [`notebooks/`](notebooks/), and small YAML snapshots are preserved under [`kaggle/`](kaggle/). The thesis PDF, raw benchmark CSVs/logs, exact notebook export, Arduino board firmware, model weights, and media are still pending. The repository therefore does **not** publish a single authoritative accuracy value, reconstructed Arduino firmware, or a claim that the physical system was tested from this checkout.
 
 ## Project at a glance
 

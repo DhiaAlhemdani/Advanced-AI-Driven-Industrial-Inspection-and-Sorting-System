@@ -4,7 +4,7 @@ Raw data is not committed to this repository. Use the canonical Kaggle source:
 
 <https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system>
 
-The project record describes **119 images**, split into **95 training** and **24 validation** images, with four component classes: `bottle`, `cap`, `label`, and `liquid`. Verify those values locally after downloading the export:
+Kaggle dataset version 10 describes **119 images**, split into **95 training** and **24 validation** images, with four component classes: `bottle`, `cap`, `label`, and `liquid`. It also reports 453 bounding-box annotations and 453 polygon annotations. Verify those values locally after downloading the export:
 
 ```bash
 python -m industrial_inspection.dataset_report \

@@ -41,7 +41,9 @@ The report is a file inventory and YOLO-label sanity check. It is not a model ev
 
 ## 3. Original implementation
 
-The current checkout does not contain the original CV, firmware, MQTT, dashboard, or maintenance source files. Add them in the boundaries described by the repository map rather than placing everything in a notebook. For each runnable experiment, record:
+The original integration notebook is public on Kaggle and is documented in [`../notebooks/README.md`](../notebooks/README.md). It contains the CV training/inference flow, host-side serial actuation branch, defect-source rules, predictive-maintenance heuristic, MQTT callbacks, Dash dashboard, and Flask video stream. The Arduino board firmware itself is not present.
+
+Preserve the exact notebook export first, then add split modules in the boundaries described by the repository map rather than silently replacing the source with a reconstruction. For each runnable experiment, record:
 
 - source commit;
 - Python/Arduino/runtime versions;

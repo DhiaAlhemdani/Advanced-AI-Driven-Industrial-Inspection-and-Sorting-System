@@ -35,8 +35,9 @@ If an end-to-end result is reported, define the denominator and include the full
 | Claim | Minimum evidence | Status in this checkout |
 | --- | --- | --- |
 | Dataset size/splits/classes | Kaggle URL plus generated manifest | Reported by project owner; regenerate locally |
-| Detection metric | Evaluator output plus model/config/split and thesis/log reference | Not available; no number claimed |
-| Sorting accuracy | Dated trial log with route ground truth and item count | Not available; no number claimed |
+| Detection metric | Evaluator output plus model/config/split and thesis/log reference | Kaggle publishes two conflicting detector result sets; see [`results/kaggle-benchmark-snapshot.md`](../results/kaggle-benchmark-snapshot.md) |
+| Sorting accuracy | Dated trial log with route ground truth and item count | Kaggle publishes a scenario table, but SC-05 and overall values need arithmetic/source reconciliation |
+| Notebook implementation | Exact `.ipynb` export plus version metadata | Public Kaggle notebook version 2 identified; exact export not yet committed |
 | Arduino/servo integration | Original firmware, wiring/board record, and trial log | Not available; no firmware reconstructed |
 | MQTT monitoring | Source/config plus sanitized message trace or screenshot with provenance | Not available |
 | Predictive maintenance | Signal definitions, labels, features, model/evaluation, and event log | Not available |

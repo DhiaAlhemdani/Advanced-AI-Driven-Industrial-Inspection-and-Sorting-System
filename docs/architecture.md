@@ -79,6 +79,19 @@ These are documentation requirements, not claims that the original implementatio
 | MQTT outage | Broker connection/queue state | Keep local control bounded; buffer or degrade as defined | Outage test log |
 | Drift or repeated equipment anomaly | Condition features and maintenance label | Raise a maintenance alert, not an inspection verdict | Time-series and event log |
 
+## Notebook-derived runtime details
+
+The original Kaggle notebook makes the following implementation details visible. They are recorded as **source configuration**, not independently validated deployment facts:
+
+- Host-side inference uses Ultralytics YOLO, with a training cell loading `yolo11m.pt` and inference/benchmark cells loading `benchmarks/weights/best.pt`.
+- The inspection cascade uses ROI filtering, component association inside a bottle box, fill-level thresholds at 0.70/0.80, label aspect-ratio threshold 0.50, grayscale standard-deviation threshold 10, and bottle aspect-ratio bounds 2.0–5.0.
+- Host-side actuation exposes `A` for reprocess and `B` for defected/reject through a serial branch; the notebook defaults to simulation (`USE_ARDUINO = False`).
+- Published MQTT topics in the notebook include `inspection/result`, `defect/source`, `maintenance/prediction`, `control/diverter/manual`, and `system/control`.
+- Predictive-maintenance inputs are motor current, motor temperature, vibration RMS, belt speed, and encoder dropouts. The notebook publishes a health score and failure probability; its default simulation/calibration values are not a substitute for a measured maintenance model.
+- Dashboard/video services use Dash/Plotly and Flask MJPEG in the notebook, with environment-specific localhost/port settings.
+
+Resolve model identity, configuration values, and physical-test provenance against the exact notebook export, benchmark files, and thesis before turning these into production claims.
+
 ## Architecture status
 
-This page is intentionally more conservative than a marketing diagram. It captures the system boundary without fabricating GPIO assignments, MQTT topics, model metrics, or hardware-test results. Replace each `needs artifact` item with a link to the original file, thesis section, or dated log as the implementation is added.
+This page is intentionally more conservative than a marketing diagram. It captures the system boundary without fabricating GPIO assignments or hardware-test results. MQTT topics and heuristic thresholds above are quoted as notebook source details, not independently validated protocol contracts. Replace each `needs artifact` item with a link to the original file, thesis section, or dated log as the implementation is imported.

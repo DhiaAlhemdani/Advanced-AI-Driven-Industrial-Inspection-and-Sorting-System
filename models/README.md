@@ -1,6 +1,6 @@
 # Models
 
-No trained weights or model configuration are included in the current checkout. When adding an export, record:
+Kaggle version 10 lists `benchmarks/weights/best.pt` and the public notebook loads it for validation/inference, but the weight is intentionally not included in this commit. The exact model provenance is also unresolved because the notebook training cell uses `yolo11m.pt` while the benchmark README labels the exported detector `YOLOv8l-Worldv2`. When adding an export, record:
 
 - training source commit and dataset version/hash;
 - model family and exact configuration;
