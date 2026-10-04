@@ -8,6 +8,7 @@
 - Integrated the uploaded firmware as a preserved source artifact; documented its observed interface and mismatches with thesis firmware claims without reconstructing behavior.
 - Updated architecture, hardware, validation, reproducibility, storage, results, media, dashboard, and limitations documentation.
 - Added a deterministic Ultralytics `results.csv` summary utility and tests.
+- Embedded the uploaded project media and complete benchmark-image gallery in the main README, with full-resolution links and evidence caveats.
 
 ## Earlier curation
 

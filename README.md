@@ -22,6 +22,32 @@ This repository documents a bottle inspection prototype combining object detecti
 
 See the complete [artifact inventory](docs/artifact-inventory.md) for sizes, hashes, and inspection notes.
 
+## Project media
+
+The media below is qualitative project evidence, not a substitute for synchronized trial logs or evaluator output.
+
+### Project banner
+
+![Industrial inspection system project banner](media/kaggle_cover_banner.png)
+
+### Conveyor prototype
+
+![Bottle conveyor prototype in the workshop](media/20260414_235234.jpg)
+
+### Dashboard and conveyor demonstration
+
+| Dashboard inspection view | Dashboard accumulated-results view |
+| --- | --- |
+| [![Dashboard showing a live inspection and conveyor](media/Screenshot_20260725_202954_MX%20Player.jpg)](media/Screenshot_20260725_202954_MX%20Player.jpg) | [![Dashboard showing accumulated inspection results and conveyor](media/Screenshot_20260725_203316_MX%20Player.jpg)](media/Screenshot_20260725_203316_MX%20Player.jpg) |
+
+### Demonstration video
+
+<video src="media/lv_0_٢٠٢٦٠٧٠٥٠٠٢٦٤.mp4" controls width="100%">
+  <a href="media/lv_0_٢٠٢٦٠٧٠٥٠٠٢٦٤.mp4">Open or download the project demonstration video</a>.
+</video>
+
+If the repository viewer does not render embedded MP4 video, use the [direct video link](media/lv_0_٢٠٢٦٠٧٠٥٠٠٢٦٤.mp4).
+
 ## Results at a glance
 
 ### Detection metrics (annotation evaluation)
@@ -46,6 +72,44 @@ Thesis Table 6:5 and the Kaggle README list 230 routed units out of 245. That ar
 | End-to-end latency | How long from item entry to completed routing? | Synchronized capture, command, sensor, and actuator timestamps |
 
 The full source-by-source reconciliation is in [`results/kaggle-benchmark-snapshot.md`](results/kaggle-benchmark-snapshot.md).
+
+## Benchmark gallery
+
+These are the uploaded Ultralytics artifacts. Curves and confusion matrices describe **box detection** on the recorded validation run; they do not measure physical sorting.
+
+### Training history
+
+[![Ultralytics training and validation history](kaggle/benchmarks/results.png)](kaggle/benchmarks/results.png)
+
+### Detection curves
+
+| Precision–recall | F1–confidence |
+| --- | --- |
+| [![Box precision-recall curve](kaggle/benchmarks/BoxPR_curve.png)](kaggle/benchmarks/BoxPR_curve.png) | [![Box F1-confidence curve](kaggle/benchmarks/BoxF1_curve.png)](kaggle/benchmarks/BoxF1_curve.png) |
+| **Precision–confidence** | **Recall–confidence** |
+| [![Box precision-confidence curve](kaggle/benchmarks/BoxP_curve.png)](kaggle/benchmarks/BoxP_curve.png) | [![Box recall-confidence curve](kaggle/benchmarks/BoxR_curve.png)](kaggle/benchmarks/BoxR_curve.png) |
+
+### Detector confusion matrices
+
+| Counts | Normalized |
+| --- | --- |
+| [![Object-detector confusion matrix](kaggle/benchmarks/confusion_matrix.png)](kaggle/benchmarks/confusion_matrix.png) | [![Normalized object-detector confusion matrix](kaggle/benchmarks/confusion_matrix_normalized.png)](kaggle/benchmarks/confusion_matrix_normalized.png) |
+
+### Label distribution and training batches
+
+[![Dataset label distribution and bounding-box statistics](kaggle/benchmarks/labels.jpg)](kaggle/benchmarks/labels.jpg)
+
+| Training batch 0 | Training batch 1 | Training batch 2 |
+| --- | --- | --- |
+| [![Training batch zero](kaggle/benchmarks/train_batch0.jpg)](kaggle/benchmarks/train_batch0.jpg) | [![Training batch one](kaggle/benchmarks/train_batch1.jpg)](kaggle/benchmarks/train_batch1.jpg) | [![Training batch two](kaggle/benchmarks/train_batch2.jpg)](kaggle/benchmarks/train_batch2.jpg) |
+
+### Validation labels and predictions
+
+| Batch | Ground-truth labels | Model predictions |
+| ---: | --- | --- |
+| 0 | [![Validation batch zero labels](kaggle/benchmarks/val_batch0_labels.jpg)](kaggle/benchmarks/val_batch0_labels.jpg) | [![Validation batch zero predictions](kaggle/benchmarks/val_batch0_pred.jpg)](kaggle/benchmarks/val_batch0_pred.jpg) |
+| 1 | [![Validation batch one labels](kaggle/benchmarks/val_batch1_labels.jpg)](kaggle/benchmarks/val_batch1_labels.jpg) | [![Validation batch one predictions](kaggle/benchmarks/val_batch1_pred.jpg)](kaggle/benchmarks/val_batch1_pred.jpg) |
+| 2 | [![Validation batch two labels](kaggle/benchmarks/val_batch2_labels.jpg)](kaggle/benchmarks/val_batch2_labels.jpg) | [![Validation batch two predictions](kaggle/benchmarks/val_batch2_pred.jpg)](kaggle/benchmarks/val_batch2_pred.jpg) |
 
 ## Architecture
 
