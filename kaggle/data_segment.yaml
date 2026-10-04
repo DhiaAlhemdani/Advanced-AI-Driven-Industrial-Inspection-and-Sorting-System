@@ -1,0 +1,13 @@
+# YOLOv8 / YOLOv11 Instance Segmentation Configuration
+# Note from the Kaggle source: to train segmentation, copy or symlink labels_seg/ to labels/.
+# Source: Kaggle dataset version 10
+path: /kaggle/input/datasets/dhiaalhemdani/industrial-inspection-system
+train: images/train
+val: images/val
+
+nc: 4
+names:
+  0: bottle
+  1: cap
+  2: label
+  3: liquid

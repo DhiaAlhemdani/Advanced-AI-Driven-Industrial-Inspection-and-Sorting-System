@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "Please cite this repository when referring to the industrial inspection and sorting graduation project."
+title: "Development of an Intelligent System for Inspection and Sorting Using Computer Vision and Predictive Maintenance"
+type: software
+authors:
+  - family-names: Lootf
+    given-names: "Deiaa Ahmed Abdo"
+    affiliation: "Mechatronics Engineering"
+repository-code: "https://github.com/DhiaAlhemdani/Advanced-AI-Driven-Industrial-Inspection-and-Sorting-System"
+url: "https://github.com/DhiaAlhemdani/Advanced-AI-Driven-Industrial-Inspection-and-Sorting-System"
+license: MIT
+keywords:
+  - computer vision
+  - industrial inspection
+  - conveyor sorting
+  - Arduino Mega 2560
+  - MQTT
+  - predictive maintenance

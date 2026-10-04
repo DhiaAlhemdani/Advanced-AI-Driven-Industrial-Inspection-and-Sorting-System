@@ -1,0 +1,12 @@
+# YOLOv8 / YOLOv11 Object Detection Configuration
+# Source: Kaggle dataset version 10
+path: /kaggle/input/datasets/dhiaalhemdani/industrial-inspection-system
+train: images/train
+val: images/val
+
+nc: 4
+names:
+  0: bottle
+  1: cap
+  2: label
+  3: liquid

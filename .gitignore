@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local data and generated reports
+data/raw/
+data/processed/
+artifacts/
+results/generated/
+models/weights/
+*.onnx
+*.pt
+*.pth
+*.h5
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
