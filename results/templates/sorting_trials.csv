@@ -1,0 +1,1 @@
+trial_id,date,hardware_revision,firmware_revision,route_definition,conveyor_speed,item_count,correct_route_count,sorting_accuracy,unknown_or_reject_count,missed_or_double_trigger_count,communication_fault_count,source_reference,notes
