@@ -1,27 +1,32 @@
-# Artifact storage and upload plan
+# Artifact storage policy
 
-## Keep Git usable
+## Canonical external artifacts
 
-The Kaggle dataset is about 232.66 MB and includes images, annotations, benchmark outputs, and model weights. Do not commit the raw archive, camera media, or large model files blindly.
+The Kaggle dataset remains the canonical location for training images, detection labels, segmentation polygons, LabelMe annotations, metadata, the original notebook, and model weights:
 
-Recommended public-repository policy:
+<https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system>
 
-| Artifact | Recommended location | Git status |
-| --- | --- | --- |
-| README, YAML, small CSV, source code | Git | Commit normally |
-| Labels and LabelMe JSON | Git if reviewed and size is acceptable; otherwise release asset | Review before commit |
-| Training images | Kaggle link or Git LFS/release | Do not commit in normal Git |
-| `best.pt` and CLIP/text-embedding weights | Git LFS, release asset, or Kaggle | Do not commit in normal Git |
-| Demo video and high-resolution media | Release asset or external artifact store | Do not commit in normal Git |
-| Thesis PDF | Git if publication rights permit; otherwise private attachment/release | Add after owner upload |
+Do not copy those large or generated artifacts into normal Git. Pin a Kaggle version and record archive/file hashes for each reproducible experiment.
 
-## Owner upload checklist
+## Repository artifacts
 
-1. Upload the thesis PDF and confirm it may be publicly redistributed.
-2. Upload model weights/media through Git LFS or a GitHub release rather than the web editor if any file is large.
-3. Add SHA-256 checksums and source/version identifiers.
-4. Confirm whether labels/annotations are original project artifacts and may be redistributed under the dataset MIT license.
-5. Run the dataset inventory and annotation validators after upload.
-6. Link each benchmark result to the thesis page and raw log row.
+Small source/configuration/CSV files and the owner-uploaded thesis, firmware, benchmark plots, and project media are currently tracked. Their inventory and hashes are in [`artifact-inventory.md`](artifact-inventory.md). Existing media is evidence material, not training data.
 
-The repository must never treat a successful file upload as proof that the file was used in the hardware-tested graduation system.
+| Artifact | Preferred location |
+| --- | --- |
+| Documentation, source, YAML/JSON, small CSV | Git |
+| Training images, labels, annotations, notebook, weights | Kaggle canonical record; stage locally under ignored paths |
+| New large model exports | Kaggle, release asset, or Git LFS; always checksum |
+| New long/high-resolution media | Release/external store or Git LFS after privacy review |
+| Generated reports | `artifacts/` or `results/generated/` locally; commit only reviewed, necessary summaries |
+
+`.gitignore` excludes local data and common weight formats. `.gitattributes` provides LFS patterns where LFS is deliberately used, but a pattern alone does not prove that a tracked file is an LFS object.
+
+## Intake checklist
+
+1. Confirm redistribution rights and privacy.
+2. Record source, version/date, size, and SHA-256.
+3. Identify whether the file was actually used in a reported experiment.
+4. Scan configuration/logs for credentials and private paths.
+5. Keep raw data/model artifacts external unless there is a documented reason to duplicate them.
+6. Link numerical claims to machine-readable logs, not only screenshots or plots.

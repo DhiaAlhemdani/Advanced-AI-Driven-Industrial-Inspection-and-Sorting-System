@@ -2,8 +2,13 @@
 
 ## Unreleased
 
-- Added evidence-first repository structure and engineering documentation.
-- Added deterministic dataset inventory and detection/sorting metric utilities.
-- Added CI for the curation utilities.
-- Added Kaggle version-10 provenance/config snapshots, notebook source map, artifact-ingestion workflow, and benchmark discrepancy audit.
-- Marked exact notebook export, board firmware, thesis, raw benchmark CSVs/logs, weights, and media as pending rather than reconstructing them.
+- Inventoried the uploaded thesis, Arduino sketch, benchmark bundle, images, screenshots, and demo video with sizes, hashes, and evidence limits.
+- Extracted and reconciled thesis, uploaded CSV/plot, Kaggle README, and Quick Inference numerical results.
+- Documented arithmetic and narrative conflicts in physical sorting claims and kept them separate from detector metrics.
+- Integrated the uploaded firmware as a preserved source artifact; documented its observed interface and mismatches with thesis firmware claims without reconstructing behavior.
+- Updated architecture, hardware, validation, reproducibility, storage, results, media, dashboard, and limitations documentation.
+- Added a deterministic Ultralytics `results.csv` summary utility and tests.
+
+## Earlier curation
+
+- Added evidence-first repository structure, dataset inventory and metric utilities, CI, Kaggle provenance snapshots, and evidence templates.

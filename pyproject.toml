@@ -21,6 +21,7 @@ dev = [
 
 [project.scripts]
 dataset-report = "industrial_inspection.dataset_report:main"
+benchmark-summary = "industrial_inspection.benchmark:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

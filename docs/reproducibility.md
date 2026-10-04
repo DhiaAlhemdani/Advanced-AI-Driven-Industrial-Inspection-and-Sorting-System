@@ -1,8 +1,8 @@
 # Reproducibility guide
 
-## 1. Environment
+## Repository utilities
 
-The repository utilities support Python 3.10+ and have no runtime dependency beyond the standard library. Development tests use pytest.
+The curated utilities support Python 3.10+ and use only the standard library at runtime; tests use pytest.
 
 ```bash
 python -m venv .venv
@@ -10,79 +10,54 @@ source .venv/bin/activate                 # Windows: .venv\\Scripts\\activate
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 pytest -q
+python scripts/summarize_benchmark.py kaggle/benchmarks/results.csv
 ```
 
-The CI workflow checks these utilities only. It does not emulate the camera, Arduino, servos, MQTT broker, dashboard, or maintenance model.
+CI tests utilities and compiles Python source. It does not emulate or certify the camera, detector, Arduino, servos, MQTT broker, dashboard, or conveyor.
 
-## 2. Dataset provenance
+## External Kaggle artifacts
 
-Canonical source: <https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system>
+Canonical dataset: <https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system>
 
-The project record currently states:
+Keep training images, detection/segmentation labels, LabelMe annotations, metadata, original notebook, and weights outside normal Git. The repository record reports 119 images (95 train / 24 validation) and classes `bottle`, `cap`, `label`, `liquid`.
 
-- 119 images;
-- 95 training images and 24 validation images;
-- four classes: `bottle`, `cap`, `label`, and `liquid`.
-
-Download and unpack the dataset locally. Do not commit raw images:
+After downloading a pinned Kaggle version locally:
 
 ```bash
-mkdir -p data/raw/industrial-inspection-system
-# Download from the Kaggle page using the method appropriate to your account.
-# Unpack the export into data/raw/industrial-inspection-system/.
-
 python -m industrial_inspection.dataset_report \
   data/raw/industrial-inspection-system \
   --class-names bottle cap label liquid \
   --output artifacts/dataset_report.json
 ```
 
-The report is a file inventory and YOLO-label sanity check. It is not a model evaluation. Preserve the generated JSON with the experiment record if its counts are used in a result claim. Record the Kaggle download date/version and a SHA-256 hash of the archive or a stable manifest.
+Record Kaggle version, download date, archive/manifest SHA-256, file counts, class counts, and any resplitting. This inventory is not model evaluation.
 
-## 3. Original implementation
+## Uploaded benchmark provenance
 
-The original integration notebook is public on Kaggle and is documented in [`../notebooks/README.md`](../notebooks/README.md). It contains the CV training/inference flow, host-side serial actuation branch, defect-source rules, predictive-maintenance heuristic, MQTT callbacks, Dash dashboard, and Flask video stream. The Arduino board firmware itself is not present.
+The committed `kaggle/benchmarks/results.csv` has 121 epoch rows. `args.yaml` records a one-hour time limit and nominal 200 epochs, which can explain why the row count is shorter but does not prove run completion semantics. Machine-specific paths remain in the configuration for provenance.
 
-Preserve the exact notebook export first, then add split modules in the boundaries described by the repository map rather than silently replacing the source with a reconstruction. For each runnable experiment, record:
+The summary tool reports final and independently peaked values. To rerun validation rather than summarize history, obtain and hash the exact Kaggle-only weights, data, labels, notebook/source revision, and Python/Ultralytics/CUDA environment. Preserve the full command and output.
 
-- source commit;
-- Python/Arduino/runtime versions;
-- dataset version/hash and split;
-- model configuration and weights checksum;
-- preprocessing, confidence, and IoU settings;
-- hardware revision and wiring assumptions;
-- broker and topic configuration, redacted as needed;
-- output artifact paths.
+## Thesis and firmware provenance
 
-See [`source-integrity.md`](source-integrity.md) before importing files from another copy.
+The thesis and uploaded firmware hashes are listed in [`artifact-inventory.md`](artifact-inventory.md). The sketch does not match several thesis firmware claims. Preserve both records; do not edit the sketch to manufacture consistency. A reproducible hardware release needs:
 
-## 4. Validation commands
+- Arduino board/core and Servo library versions;
+- sketch and compiled-binary hashes;
+- host source revision and matching serial settings;
+- wiring/power/mechanical revisions;
+- a safe bring-up procedure;
+- timestamped per-item command, sensor, actuation, and lane outcomes.
 
-A complete evidence drop should make the following commands or their exact project-specific equivalents reproducible:
+Compilation alone is not physical validation.
 
-```bash
-# Dataset inventory
-python -m industrial_inspection.dataset_report <dataset-root> \
-  --class-names bottle cap label liquid \
-  --output artifacts/dataset_report.json
+## Result reproduction hierarchy
 
-# Software checks
-pytest -q
+1. **Artifact extraction:** rerun the CSV summary and verify hashes.
+2. **Detector reevaluation:** run exact weights against an immutable split/config.
+3. **Inspection replay:** execute detector plus OpenCV/rules against per-item ground truth.
+4. **Hardware bench:** verify one command/sensor/actuator path safely.
+5. **Physical trial:** log every item and actual lane under declared speed/geometry.
+6. **End-to-end timing:** synchronize clocks and report distributions, not only averages.
 
-# Vision evaluation: add the original implementation command here.
-# Physical sorter trial: add the bench procedure and log path here.
-# MQTT/dashboard replay: add the sanitized replay command here.
-```
-
-Do not fill the last three lines with guessed commands. They should point to the actual implementation and evidence.
-
-## 5. Reproducibility checklist
-
-- [ ] Dataset export and split are identified.
-- [ ] The training/evaluation source commit is recorded.
-- [ ] Model artifact and checksum are recorded.
-- [ ] Detection metric configuration is recorded.
-- [ ] Physical trial item count and route/bin definitions are recorded.
-- [ ] Hardware firmware and board revision are recorded.
-- [ ] MQTT payloads are sanitized and replayable, or the limitation is stated.
-- [ ] Thesis section and benchmark-log row are cited for every headline number.
+Do not skip from level 1 to a claim about level 5.

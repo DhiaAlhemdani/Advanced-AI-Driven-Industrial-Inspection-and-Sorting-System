@@ -1,42 +1,48 @@
 # Source integrity and provenance
 
-## Why this exists
+## Status labels
 
-A polished repository must distinguish original project artifacts from documentation added during curation. Reconstructed code can look plausible while silently changing timing, thresholds, pin mappings, or evaluation logic. This project therefore treats provenance as part of the engineering deliverable.
+- **Owner-uploaded artifact** — supplied in the repository upload and preserved; use does not by itself prove it was the exact thesis/test revision.
+- **External original reference** — canonical project artifact hosted on Kaggle but not copied here.
+- **Curated** — documentation, packaging, tests, or audit utilities added for reproducibility.
+- **Generated** — produced from named inputs by a recorded command; include source hashes.
 
-## Artifact status labels
+Current owner-uploaded artifacts include the thesis PDF, Arduino sketch, benchmark bundle, and media listed in [`artifact-inventory.md`](artifact-inventory.md). The public Kaggle notebook is an external original reference. `src/industrial_inspection/`, scripts, tests, and evidence documentation are curated.
 
-Use one of these labels in commit messages, file headers, or the relevant README:
+## Intake and preservation rules
 
-- **Original** — supplied from the graduation-project implementation and preserved with only documented portability edits.
-- **Curated** — documentation, packaging, tests, or utilities added to make the original work understandable/reproducible.
-- **Reference** — a new illustrative example that is not the project implementation and must not be reported as hardware-tested.
-- **Generated** — produced by a command from a named source artifact; include the command and source hash.
+For each new artifact:
 
-The current `src/industrial_inspection/` utilities are **Curated**. The boundary READMEs, Kaggle snapshots, and audit tables are **Curated**. The public Kaggle notebook `advanced-ai-driven-quality-control-system` is an **Original** source reference; its exact `.ipynb` export should be preserved before refactoring. The notebook contains original host-side vision, MQTT, dashboard, actuation, and maintenance code, but no Arduino board firmware is present in this checkout.
+1. Record original filename/path, source, date received, size, and SHA-256.
+2. Preserve an unmodified copy where licensing/privacy permits.
+3. State whether its use in the thesis/demo is confirmed, reported, or unknown.
+4. Identify dependencies, runtime/tool versions, and machine-specific paths.
+5. Link the relevant thesis page, figure, table, or trial record.
+6. Redact secrets and personal/private data without silently altering technical meaning.
+7. Never replace absent code or evidence with a plausible reconstruction labeled as original.
 
-## Intake checklist for original files
+## Conflicting sources
 
-For each file added from the project archive:
+Source precedence is not based on the highest metric. When sources disagree:
 
-1. Record its original path and date received.
-2. Mark whether it was used in the thesis/demo.
-3. Preserve meaningful comments and constants.
-4. Identify dependencies and runtime versions.
-5. Run it in a safe offline mode before connecting hardware.
-6. Link the relevant thesis page, figure, or benchmark-log row.
-7. Redact credentials, private hosts, personal data, and raw camera footage.
-8. Never replace an absent file with a guessed implementation and call it original.
+- preserve each value with its source and measurement type;
+- recompute percentages from published counts;
+- distinguish observed code behavior from thesis prose;
+- distinguish final-row, checkpoint-selected, and independently peaked metrics;
+- leave the conflict explicit until immutable artifacts or raw logs resolve it.
+
+This policy currently applies to detector identity/results, the sorting table, physical-sorting narrative, UART speed, interrupt/polling architecture, servo timing/angles, and emergency-stop behavior.
 
 ## Numerical-result checklist
 
-Before adding a metric to README or a release:
+Before publishing a result, identify:
 
-- identify the exact evaluator and commit;
-- identify the dataset export/hash and split;
-- capture configuration, class order, and thresholds;
-- compare against the thesis and the benchmark log;
-- state whether it measures detection, physical sorting, or end-to-end behavior;
-- preserve the raw or redacted evidence path.
+- evaluator/source artifact and checksum;
+- model/checkpoint and code environment;
+- dataset version, split, instances, and class order;
+- confidence, IoU, aggregation, and selection criterion;
+- whether the unit is a box, bottle decision, physical route, or maintenance event;
+- denominator, exclusions, raw log, and arithmetic check;
+- corresponding limitations.
 
-If sources disagree, report the discrepancy and keep both references visible until resolved. Do not silently choose the more impressive number.
+The uploaded benchmark CSV passes artifact extraction, but not independent model reproduction. The thesis physical table fails arithmetic/narrative consistency checks and lacks the item ledger.

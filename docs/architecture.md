@@ -1,97 +1,97 @@
-# System architecture
+# System architecture and evidence map
 
-## Purpose
+## Scope
 
-The graduation project combines vision-based bottle/component inspection with physical conveyor sorting and operational monitoring. This document describes the engineering boundary that is currently supported by the project brief. Exact implementation details must be copied from the original source and thesis rather than inferred.
+The project combines component detection, geometric quality rules, serial actuation, physical routing, monitoring, and a simulated condition-health layer. The sources do not describe one fully reproducible build: the thesis, Kaggle notebook record, benchmark bundle, and uploaded Arduino sketch differ. This document labels what each layer actually establishes.
 
-## High-level data flow
+## Evidence-aware data flow
 
 ```mermaid
 flowchart TB
-    subgraph Inspection[Inspection edge]
-        C[Camera / image] --> P[Preprocess]
-        P --> V[Vision inference]
-        V --> Q[Quality / component decision]
+    subgraph Host[Host-side design described by thesis/notebook]
+      C[Camera frame] --> D[YOLO component boxes]
+      D --> O[OpenCV geometry / fill checks]
+      O --> Q{Quality decision}
+      Q -->|pass: no command| PASS[Continue main lane]
+      Q -->|A: rework| U[Serial transport]
+      Q -->|B: scrap/reject| U
+      Q --> OBS[MQTT / dashboard path]
+      SIM[Virtual sensor inputs] --> PM[Rule-based health score]
+      PM --> OBS
     end
 
-    subgraph Sorter[Physical sorter]
-        Q --> X[Routing decision]
-        X --> A[Arduino Mega 2560]
-        A --> S1[Servo actuator 1]
-        A --> S2[Servo actuator 2]
-        A --> CV[Conveyor timing / state]
-    end
-
-    subgraph Operations[Monitoring and maintenance]
-        CV --> T[Telemetry]
-        A --> T
-        T --> M[MQTT broker]
-        M --> D[Dashboard]
-        CV --> F[Condition features]
-        F --> PM[Predictive-maintenance analysis]
-        PM --> D
+    subgraph UploadedSketch[Behavior visible in sketch_may1a.ino]
+      U --> RX[Single-character serial read]
+      RX --> QA[Queue A, capacity 10]
+      RX --> QB[Queue B, capacity 10]
+      PA[Proximity A, pin 2, active low] --> GA[Pending-A gate]
+      PB[Proximity B, pin 3, active low] --> GB[Pending-B gate]
+      QA --> GA
+      QB --> GB
+      GA --> SA[Servo A, pin 9]
+      GB --> SB[Servo B, pin 10]
     end
 ```
 
-## Confirmed system elements
+A line in this diagram means code or prose describes a connection; it does not prove the connection was exercised in the photographed system.
 
-| Boundary | Evidence available now | What still needs the original artifact |
-| --- | --- | --- |
-| Vision | Computer vision is used for bottle inspection; four reported component classes are `bottle`, `cap`, `label`, `liquid` | Model family, annotations, preprocessing, thresholds, inference code, and runtime target |
-| Dataset | 119 images; 95 train and 24 validation are reported; Kaggle URL is public | Download hash, exact directory format, annotation statistics, and dataset version |
-| Actuation | Arduino Mega 2560 and two servos are reported | Firmware, pins, servo limits, route map, timing, and safety behavior |
-| Monitoring | MQTT and a dashboard are reported | Broker topology, topics, payload schema, dashboard source, and telemetry traces |
-| Maintenance | Predictive maintenance is part of the project title/scope | Signals, labels, features, model, alert policy, and time-series evidence |
+## Layer-by-layer record
 
-## Runtime contracts to document when source arrives
-
-### Vision to sorting
-
-- Input image/frame identifier and capture timestamp.
-- Class/defect decision and confidence values.
-- Coordinate or tracking information used to synchronize the item with the conveyor.
-- Timeout behavior when no object is detected or inference exceeds the conveyor timing budget.
-- A decision identifier that can be joined to the physical trial log.
-
-### Host to Arduino
-
-- Transport and framing (serial, network bridge, or other mechanism).
-- Route command and item/decision identifier.
-- Acknowledgement, duplicate handling, timeout, and retry policy.
-- Servo actuation limits and return-to-safe-state behavior.
-
-### Controller to monitoring
-
-- Event timestamp and device identifier.
-- Conveyor/servo state and fault code.
-- Item decision, route command, and completion state.
-- Latency and communication status.
-
-These are documentation requirements, not claims that the original implementation used every field.
-
-## Failure-oriented view
-
-| Failure | Detection signal | Required safe response | Evidence to attach |
+| Boundary | Repository evidence | What can be said | What remains unverified |
 | --- | --- | --- | --- |
-| Unreadable image / low confidence | Vision confidence or capture error | Stop, reject, or route to an explicitly defined unknown path | Inference log and route outcome |
-| Lost command or acknowledgement | Controller timeout | Prevent stale actuation; define retry/stop policy | Serial/network trace |
-| Servo obstruction or limit fault | Actuator timeout/current/position signal if available | Stop conveyor or enter safe state | Hardware trial record |
-| MQTT outage | Broker connection/queue state | Keep local control bounded; buffer or degrade as defined | Outage test log |
-| Drift or repeated equipment anomaly | Condition features and maintenance label | Raise a maintenance alert, not an inspection verdict | Time-series and event log |
+| Dataset | Kaggle YAML and public record | Four classes; reported 95/24 image split | Exact downloaded manifest in this checkout |
+| Detector training | `results.csv`, plots, `args.yaml`, settings | Metrics/configuration stored in those artifacts | Weight checksum, exact environment/input, rerun |
+| Inspection logic | Thesis and public-notebook audit | YOLO plus OpenCV/rule architecture is described | Exact notebook export and end-to-end replay |
+| Host → controller | Thesis/notebook prose plus sketch | `A` and `B` are common command concepts | Exact host baud/config matched to uploaded board build |
+| Controller | Uploaded `.ino` | Observable constants and control flow listed below | Board revision, compile target, wiring, flashed binary, trial use |
+| Physical sorting | Thesis Table 6:5 and media | A prototype and reported test matrix exist | Item-level route outcomes and arithmetic reconciliation |
+| Monitoring | Screenshots and notebook audit | Dashboard concepts/UI are evidenced | Dashboard source, MQTT trace, synchronized trial provenance |
+| Maintenance | Thesis and screenshots | Virtual-sensing health formula/state demonstration | Physical sensors, failure labels, predictive model accuracy |
 
-## Notebook-derived runtime details
+## Uploaded firmware contract — code inspection only
 
-The original Kaggle notebook makes the following implementation details visible. They are recorded as **source configuration**, not independently validated deployment facts:
+The sketch is preserved without reconstructing missing behavior. Static inspection shows:
 
-- Host-side inference uses Ultralytics YOLO, with a training cell loading `yolo11m.pt` and inference/benchmark cells loading `benchmarks/weights/best.pt`.
-- The inspection cascade uses ROI filtering, component association inside a bottle box, fill-level thresholds at 0.70/0.80, label aspect-ratio threshold 0.50, grayscale standard-deviation threshold 10, and bottle aspect-ratio bounds 2.0–5.0.
-- Host-side actuation exposes `A` for reprocess and `B` for defected/reject through a serial branch; the notebook defaults to simulation (`USE_ARDUINO = False`).
-- Published MQTT topics in the notebook include `inspection/result`, `defect/source`, `maintenance/prediction`, `control/diverter/manual`, and `system/control`.
-- Predictive-maintenance inputs are motor current, motor temperature, vibration RMS, belt speed, and encoder dropouts. The notebook publishes a health score and failure probability; its default simulation/calibration values are not a substitute for a measured maintenance model.
-- Dashboard/video services use Dash/Plotly and Flask MJPEG in the notebook, with environment-specific localhost/port settings.
+- Arduino `Servo` library; serial initialized at **9600 baud**.
+- Servo A attaches to **pin 9**, is commented `reprocess`, rests at 35°, activates at 0°.
+- Servo B attaches to **pin 10**, is commented `defected`, rests at 0°, activates at 35°.
+- Proximity inputs use **pins 2 and 3**, plain `INPUT`, and trigger when read `LOW`.
+- `A` and `B` set independent pending states; actuation waits for the corresponding sensor.
+- Each route has a ten-character circular queue. Queue-full return values are ignored.
+- Active position is held for **500 ms**, then returned to rest and the next queued command is considered.
+- Sensor values are printed on the same serial port approximately once per second.
+- There is no pass command, framing, acknowledgement, item identifier, checksum, retry, pending timeout, queue-overflow report, emergency-stop command, conveyor output, or MQTT code.
+- Despite thesis language about interrupts, this sketch polls `digitalRead()` and defines no ISR.
 
-Resolve model identity, configuration values, and physical-test provenance against the exact notebook export, benchmark files, and thesis before turning these into production claims.
+These are source observations, not claims about electrical behavior, servo calibration under load, or hardware test results.
 
-## Architecture status
+## Cross-source mismatches that affect integration
 
-This page is intentionally more conservative than a marketing diagram. It captures the system boundary without fabricating GPIO assignments or hardware-test results. MQTT topics and heuristic thresholds above are quoted as notebook source details, not independently validated protocol contracts. Replace each `needs artifact` item with a link to the original file, thesis section, or dated log as the implementation is imported.
+| Topic | Thesis / notebook record | Uploaded sketch |
+| --- | --- | --- |
+| UART speed | Thesis: 115200 bps | `Serial.begin(9600)` |
+| Sensor processing | Thesis: INT0 interrupt/ISR | Loop polling on pins 2 and 3 |
+| Route timing | Thesis: 400 ms and 1000 ms flight delays for 20 cm / 50 cm gates | Waits for route-specific active-low proximity input; no distance timer |
+| Sweep / dwell | Thesis: 45–50° sweep, 68 ms, 250 ms dwell | 0↔35° commands, `HOLD_TIME = 500`; physical motion duration unknown |
+| Emergency stop | Thesis maintenance section sends `S` | Only `A` and `B` are handled |
+| Tracking | Thesis describes indexed targets/registers | Per-route character queues; no item IDs |
+| Serial response | Thesis describes command path | No acknowledgement/error response; periodic debug text only |
+
+The host implementation must not be wired to this sketch based only on the thesis settings. Baud rate, electrical mapping, startup positions, route semantics, and safe behavior need bench confirmation first.
+
+## Timing boundaries
+
+The thesis's **20.6 ms** value is a sum of host computational stages. Its **2–4 s** value spans item entry through completed physical deflection. Neither is derivable from this sketch. The sketch's 500 ms hold is only a programmed dwell after a sensor-gated command and is not end-to-end latency.
+
+## Operational failure questions
+
+Before deployment, define and test:
+
+1. What happens when a command is pending but its sensor never goes low?
+2. What happens to the eleventh command for a busy route?
+3. Can periodic debug text interfere with a host expecting acknowledgements?
+4. What state is safe after reset, USB loss, servo power loss, or stuck-low sensor?
+5. How are a vision decision and the physical bottle matched without an item ID?
+6. Can both servos move safely at once, including power and mechanical clearance?
+
+Until those questions have measured answers, this is a documented prototype interface rather than a production control contract.

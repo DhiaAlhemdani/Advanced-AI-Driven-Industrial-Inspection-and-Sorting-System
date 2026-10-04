@@ -1,11 +1,24 @@
 # Results and evidence
 
-This directory is for measured evidence, not aspirational numbers. Kaggle now provides a public benchmark snapshot, but its README and Quick Inference notebook expose different detection values and an arithmetic inconsistency in one physical-sorting row. The discrepancy is recorded in [`kaggle-benchmark-snapshot.md`](kaggle-benchmark-snapshot.md); no single value is asserted as final until the thesis PDF and raw benchmark files are reconciled.
+The repository now contains an uploaded Ultralytics training bundle and a thesis, while Kaggle provides a dataset README and Quick Inference output. Their values are compared in [`kaggle-benchmark-snapshot.md`](kaggle-benchmark-snapshot.md).
 
-Use the templates in [`templates/`](templates/) and cite the source for every populated row. Start with [`kaggle-benchmark-snapshot.md`](kaggle-benchmark-snapshot.md) for the current source comparison, not as a substitute for the thesis/log evidence:
+Key boundaries:
 
-- `detection_metrics.csv` — model-vs-annotation performance on a named split and evaluation configuration;
-- `sorting_trials.csv` — physically observed route outcomes, with inspected-item count and route definition;
-- `maintenance_events.csv` — condition signals, thresholds, events, and actions.
+- uploaded precision/recall/mAP are **box detection** metrics;
+- the thesis's 85–95% value is an incompletely defined runtime inspection range;
+- route counts are **physical sorting** evidence and contain arithmetic contradictions;
+- simulated health scores are rule/formula outputs, not predictive-maintenance accuracy.
 
-Keep these concepts separate in README tables and presentations. A high detection score does not prove a servo routed the item correctly, and a correct physical route does not prove the model detected every component correctly.
+Use the templates in [`templates/`](templates/) for new evidence:
+
+- `detection_metrics.csv` — exact model/split/evaluator result;
+- `sorting_trials.csv` — one physically observed route per item;
+- `maintenance_events.csv` — signals, labels/events, thresholds, and actions.
+
+Summarize the committed training CSV reproducibly with:
+
+```bash
+python scripts/summarize_benchmark.py kaggle/benchmarks/results.csv
+```
+
+That command extracts existing rows; it does not rerun validation.
