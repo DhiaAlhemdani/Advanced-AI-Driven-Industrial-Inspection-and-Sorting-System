@@ -1,72 +1,85 @@
 # Validation and evidence protocol
 
-## The two accuracy numbers are not interchangeable
+## Keep four measurements separate
 
-### Detection performance
+### 1. Box detection
 
-Detection performance measures a computer-vision model against annotations under a declared evaluation configuration. Typical outputs may include precision, recall, F1, mAP@0.50, or mAP@[0.50:0.95], but the metric name alone is not enough. Record the model, split, class order, confidence threshold, IoU threshold, matching policy, and whether values are per-class or aggregated.
+Precision, recall, F1, AP, and mAP compare predicted boxes with annotations using confidence ranking and IoU matching. Report the exact weights, dataset version/split, evaluator version, image size, confidence/IoU policy, class aggregation, and whether a value is a final epoch, selected checkpoint, or independently selected peak.
 
-A simple count-based sanity check is:
+The uploaded benchmark artifacts belong to this layer. They do not establish route correctness.
 
-```text
-precision = true positives / (true positives + false positives)
-recall    = true positives / (true positives + false negatives)
-F1        = 2 × precision × recall / (precision + recall)
-```
+### 2. Runtime inspection/classification
 
-The formulas do not replace the original evaluator, especially for object detection where IoU matching and confidence ranking matter.
+The full inspection decision may combine detector output with label-angle, fill-level, association, and rule logic. Its unit is a bottle/inspection event rather than a bounding box. Record one ground-truth condition and one decision per item, including unknown or low-confidence outcomes.
 
-### Physical sorting accuracy
+The thesis records an 85–95% integrated runtime inspection range. A per-item decision log is needed for independent reproduction.
 
-Physical sorting accuracy measures route outcomes observed on the bench:
+### 3. Physical sorting
 
 ```text
-sorting accuracy = correctly routed items / physically inspected items
+sorting accuracy = correctly routed physical items / all physically inspected items
 ```
 
-Record the ground-truth route/bin, actual route/bin, unknown/reject outcomes, missed or double-triggered items, trial speed, and any item exclusions. This number must come from a physical trial log. It is not derived from detection precision or recall.
+Record intended lane, actual lane, item ID, command, sensor/actuator events, exclusions, jams, missed/double actuations, conveyor speed, and hardware/firmware revisions. The count-derived rates from Table 6:5 are 57.14% for SC-05 and 93.88% overall.
 
-### End-to-end behavior
+### 4. End-to-end behavior
 
-If an end-to-end result is reported, define the denominator and include the full chain: capture, inference, decision transport, conveyor timing, servo movement, and observed bin. Also record failures caused by communication, timing, jams, or maintenance conditions.
+Define the start and end event. The documented 20.6 ms value is a host-processing sum, while 2–4 seconds covers field-of-view entry through completed physical deflection. Synchronized clocks are required to split capture, inference, rules, serial, flight, sensor wait, servo movement, and dwell.
 
-## Evidence matrix
+## Evidence status
 
-| Claim | Minimum evidence | Status in this checkout |
+| Claim | Minimum evidence | Current status |
 | --- | --- | --- |
-| Dataset size/splits/classes | Kaggle URL plus generated manifest | Reported by project owner; regenerate locally |
-| Detection metric | Evaluator output plus model/config/split and thesis/log reference | Kaggle publishes two conflicting detector result sets; see [`results/kaggle-benchmark-snapshot.md`](../results/kaggle-benchmark-snapshot.md) |
-| Sorting accuracy | Dated trial log with route ground truth and item count | Kaggle publishes a scenario table, but SC-05 and overall values need arithmetic/source reconciliation |
-| Notebook implementation | Exact `.ipynb` export plus version metadata | Public Kaggle notebook version 2 identified; exact export not yet committed |
-| Arduino/servo integration | Original firmware, wiring/board record, and trial log | Not available; no firmware reconstructed |
-| MQTT monitoring | Source/config plus sanitized message trace or screenshot with provenance | Not available |
-| Predictive maintenance | Signal definitions, labels, features, model/evaluation, and event log | Not available |
+| Dataset size/splits/classes | Versioned Kaggle export plus manifest | Public record says 119 images, 95/24, four classes; regenerate locally |
+| Uploaded detector metrics | CSV/configuration and plot consistency | Extracted; weights/environment remain external |
+| Quick Inference metrics | Preserved notebook output, version, model hash | Public output records 24 images / 83 instances |
+| Runtime inspection accuracy | Per-item decisions and ground truth | Thesis records an 85–95% range; item log not included |
+| Physical sorting accuracy | Item-level route ledger | Aggregate counts and calculated rates documented; ledger not included |
+| Firmware behavior | Exact source, build record, board trace | Source present; build and physical execution require a dated record |
+| MQTT/dashboard | Source/config and timestamped trace | Screenshots and notebook description available |
+| Predictive maintenance | Physical signals, failure labels, time-aware evaluation | Virtual-sensing formula and dashboard-state demonstration available |
 
-## Evidence-entry templates
+## Arithmetic and reporting checks
 
-Populate the CSV templates under [`results/templates/`](../results/templates/). Every non-empty result row must include a source reference such as a thesis page, benchmark-log filename/row, or a reproducible run artifact. Avoid vague references such as “testing” or “final result.”
+Every result table should satisfy these publication checks:
 
-Recommended evidence package for one release:
+1. Row totals equal the declared denominator.
+2. Displayed percentages recompute from displayed counts after stated rounding.
+3. Selected metrics identify the selection criterion and checkpoint.
+4. Independently selected peaks are labeled as peak values.
+5. Detection instances are not counted as physical bottles.
+6. Pass-through items are included in the physical denominator unless an exclusion is declared.
+7. Failed, unknown, jammed, and unobserved outcomes have an explicit treatment.
+
+Applied to the published route counts: `20/35 = 57.14%` and `230/245 = 93.88%`.
+
+## Required evaluation packages
+
+### Detector package
 
 ```text
-results/
-├── detection_metrics.csv
-├── sorting_trials.csv
-├── maintenance_events.csv
-└── evidence/
-    ├── dataset_report.json
-    ├── benchmark-log-redacted.csv
-    └── README.md
+weights checksum
+model/config identity
+code and Ultralytics versions
+dataset archive/manifest checksum and split
+validation command
+confidence and IoU settings
+machine-readable per-class and aggregate output
 ```
 
-Keep private credentials, personally identifying information, and raw camera footage outside the public repository.
+### Physical trial package
 
-## Acceptance checks before publishing a headline result
+Use [`../results/templates/sorting_trials.csv`](../results/templates/sorting_trials.csv), one row per item. Add synchronized serial/sensor logs, firmware hash, wiring/mechanical revision, speed, operator/date, and an explanation of exclusions.
 
-1. Re-run the evaluator from a clean environment.
-2. Confirm the dataset version and split against the thesis.
-3. Check that the reported class order matches the label map.
-4. Compare the number to the original benchmark log, not memory or a screenshot without provenance.
-5. State whether the result is detection, physical sorting, or end-to-end.
-6. State the sample size and exclusions.
-7. Add the limitation and failure cases next to the result.
+### Maintenance package
+
+Use [`../results/templates/maintenance_events.csv`](../results/templates/maintenance_events.csv). Keep formula demonstrations using simulated values separate from prediction against physical failure/maintenance labels.
+
+## Checks available in this checkout
+
+```bash
+pytest -q
+python scripts/summarize_benchmark.py kaggle/benchmarks/results.csv
+```
+
+The benchmark summary is deterministic extraction. Arduino compilation is not part of CI because the repository does not pin an Arduino core/toolchain, and compilation alone does not validate hardware operation.

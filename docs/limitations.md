@@ -1,27 +1,42 @@
 # Limitations and responsible claims
 
-## Dataset and vision
+## Dataset and detector
 
-- The reported dataset contains 119 images, with 95 training and 24 validation images. This is a small validation surface for a deployment claim.
-- A single validation split can hide sensitivity to lighting, camera pose, bottle geometry, backgrounds, and conveyor motion.
-- The four component classes describe the annotation vocabulary; they do not, by themselves, define defect severity, acceptable quality, or route logic.
-- No model architecture, training configuration, confidence threshold, IoU policy, or benchmark output is available in this checkout.
-- Dataset counts and annotation counts do not measure detection quality.
+- The reported dataset has 119 images with 24 validation images. Results from one small split may be sensitive to scene repetition, lighting, camera pose, and bottle identity.
+- Training data, labels, annotations, the notebook, and weights remain on Kaggle. This checkout cannot independently rerun inference.
+- Available records reference `yolov8l-worldv2.pt`, YOLO-World, YOLOv11, and `yolo11m.pt`; every result should retain its source configuration.
+- The uploaded CSV does not encode the validation image/instance count. Quick Inference records 24 images and 83 instances.
+- Peak metrics selected independently across epochs do not describe one checkpoint; final and selected-checkpoint rows are identified explicitly.
+- Component-box mAP does not directly evaluate label skew, fill ratio, defect severity, bottle-level decisions, or routing.
 
-## Physical system
+## Numerical evidence boundaries
 
-- Detection performance does not measure conveyor timing, servo repeatability, mechanical interference, or route correctness.
-- Physical sorting accuracy requires a logged denominator and ground truth for every inspected item.
-- Without the original firmware and wiring record, pin assignments, servo angles, timing, and safe-state behavior must remain unspecified.
-- A lab demonstration does not establish production throughput, safety compliance, long-duration reliability, or operation under changing lighting and contamination.
+- The thesis's 85–95% result is an integrated runtime inspection range rather than an annotation-based detector metric.
+- Physical rates in the updated edition are calculated from the published counts: 20/35 = 57.14% for SC-05 and 230/245 = 93.88% overall.
+- An item-level route ledger and raw timer/logic-analyzer traces are not included, so independent physical-trial reproduction is not currently possible.
+
+## Firmware and physical system
+
+- The uploaded sketch defines the current repository firmware specification; a dated flashed-binary record is needed for trial provenance.
+- The sketch uses 9600-baud polling, a 500 ms hold, 35° requested travel, per-route queues, and `A`/`B` commands.
+- It does not implement acknowledgements, item IDs, pending timeouts, queue-overflow reports, an `S` command, conveyor control, or a communication-loss safe state.
+- Pin numbers and requested servo angles require confirmation against a physical wiring and calibration record before powered operation.
+- Prototype photographs, screenshots, and video are qualitative evidence rather than exhaustive trial logs.
+- A laboratory prototype does not establish production safety, ingress protection, EMC tolerance, guarding, fail-safe operation, or regulatory compliance.
+
+## Timing and throughput
+
+- The documented 20.6 ms host-processing sum excludes bottle flight and completed mechanical routing; the 2–4 second value uses an end-to-end boundary.
+- Hardware accelerator, timing instrumentation, clock synchronization, variance/percentiles, warm-up policy, and raw samples are not available.
+- Throughput evaluation requires a per-item stress-test log with speed, spacing, route, and fault outcomes.
 
 ## Monitoring and predictive maintenance
 
-- MQTT connectivity and a dashboard provide observability; they do not automatically make a system predictive-maintenance capable.
-- Predictive maintenance needs time-stamped condition signals, a defined failure/maintenance label, a time-aware evaluation protocol, and a documented alert policy.
-- No maintenance time series, failure labels, feature set, model, or false-alert analysis is available in this checkout.
-- Broker outages, clock drift, duplicated messages, stale commands, and missing telemetry need explicit handling in the original implementation.
+- Dashboard counters and screenshots are snapshots rather than synchronized evidence of the 245-item trial.
+- MQTT source, broker configuration, payload trace, duplicate/loss handling, and clock behavior are not committed.
+- The thesis uses simulated vibration, temperature, and current. Health scores and failure probabilities demonstrate a formula/state machine rather than prediction against physical failures.
+- No failure labels, temporal train/test split, false-alert analysis, calibration assessment, or remaining-useful-life evaluation is available.
 
-## Scope of this curation
+## Reproducibility boundary
 
-The added Python utilities validate repository evidence and compute simple metric primitives. They are not the original model, firmware, dashboard, or hardware test harness. Until the missing artifacts are added, the strongest defensible claims are the supplied project scope, the public dataset reference, and the documented architecture—not numerical performance or hardware validation.
+The Python tests cover curated dataset, metric, and CSV-summary utilities. They do not test the detector, original notebook, dashboard, MQTT path, electrical wiring, or physical sorter. Kaggle artifacts should remain externally versioned and checksum-identified for reproducible releases.

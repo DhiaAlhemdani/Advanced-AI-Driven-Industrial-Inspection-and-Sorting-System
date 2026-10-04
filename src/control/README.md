@@ -1,5 +1,7 @@
-# Control and integration implementation boundary
+# Control and integration boundary
 
-Place the **original** conveyor-routing and host-to-Arduino integration files here when they are supplied. Include the interface assumptions that were actually used: command format, timing, acknowledgement/error handling, and route/bin mapping.
+The host-side control implementation remains in the external Kaggle notebook; preserve the exact notebook export before refactoring it here. The notebook and project documentation use `A` for reprocess and `B` for scrap/reject, with pass represented by no command.
 
-The Kaggle notebook contains host-side diverter simulation and a serial branch (`A` for reprocess, `B` for defected/reject), defaulting to simulation. No Arduino board firmware or reconstructed control code is present in the current checkout. The repository must not describe the notebook branch or a firmware listing as hardware-tested unless the original board source and a corresponding test record are available.
+The uploaded board sketch is preserved at [`../../firmware/sketch_may1a.ino`](../../firmware/sketch_may1a.ino) and defines the canonical current firmware parameters: 9600 baud, loop polling, sensor-gated per-route queues, and a 500 ms hold. Its observable interface is documented in [`../../docs/hardware.md`](../../docs/hardware.md).
+
+Any future host adapter should pin the firmware hash, serial settings, command format, and safe bench procedure.
