@@ -9,6 +9,7 @@
 - Updated architecture, hardware, validation, reproducibility, storage, results, media, dashboard, and limitations documentation.
 - Added a deterministic Ultralytics `results.csv` summary utility and tests.
 - Embedded the uploaded project media and complete benchmark-image gallery in the main README, with full-resolution links and evidence caveats.
+- Added a reproducibly generated, annotated thesis revision that preserves the historical PDF, marks superseded metric/firmware statements, appends corrected benchmark and sorting tables, and adopts the uploaded sketch parameters with explicit provenance limits.
 
 ## Earlier curation
 

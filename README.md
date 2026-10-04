@@ -7,13 +7,14 @@
 
 This repository documents a bottle inspection prototype combining object detection, rule-based/OpenCV checks, serially commanded Arduino actuation, a three-route conveyor concept, dashboard monitoring, and simulated predictive-maintenance telemetry.
 
-> **Evidence boundary:** the thesis, Arduino sketch, benchmark CSV/plots, photographs, screenshots, and demo video are now present and inventoried. Training images, labels, annotations, the original notebook, and model weights remain canonical on [Kaggle](https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system) and are intentionally not duplicated here. The uploaded sources disagree on several numerical and firmware details; this README reports the disagreement rather than silently selecting a headline value.
+> **Evidence boundary:** the thesis, Arduino sketch, benchmark CSV/plots, photographs, screenshots, and demo video are now present and inventoried. Training images, labels, annotations, the original notebook, and model weights remain canonical on [Kaggle](https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system) and are intentionally not duplicated here. The uploaded sources disagree on several numerical and firmware details; this README reports the disagreement rather than silently selecting a headline value. The historical thesis remains unchanged, while an [annotated evidence-reconciled revision](docs/Project%20Research%20-%20Evidence-Reconciled%20Revision.pdf) visibly marks superseded claims and appends the controlling corrections.
 
 ## Project record
 
 | Area | Available evidence |
 | --- | --- |
 | Dataset | 119 images: 95 train / 24 validation; classes `bottle`, `cap`, `label`, `liquid` (Kaggle version-10 record) |
+| Thesis | [Original historical PDF](docs/Project%20Research.pdf) plus [annotated evidence-reconciled revision](docs/Project%20Research%20-%20Evidence-Reconciled%20Revision.pdf) and [revision notes](docs/thesis-revision-notes.md) |
 | Detection bundle | 121-row Ultralytics `results.csv`, settings, curves, confusion matrices, and qualitative train/validation mosaics |
 | Physical evaluation | Thesis describes 245 bottles across five scenarios; no item-level route log is present |
 | Firmware | Owner-uploaded [`firmware/sketch_may1a.ino`](firmware/sketch_may1a.ino), preserved as supplied and documented separately |
@@ -169,8 +170,17 @@ python -m industrial_inspection.dataset_report \
 
 These commands test curation utilities and summarize an existing CSV. They do not rerun model inference or certify hardware.
 
+Rebuild the annotated thesis copy from the checksum-verified original with:
+
+```bash
+python -m pip install -e ".[pdf]"
+python scripts/build_revised_thesis.py
+```
+
 ## Documentation
 
+- [Original thesis](docs/Project%20Research.pdf) and [evidence-reconciled revision](docs/Project%20Research%20-%20Evidence-Reconciled%20Revision.pdf)
+- [Thesis revision notes and provenance](docs/thesis-revision-notes.md)
 - [Artifact inventory](docs/artifact-inventory.md)
 - [Architecture and evidence boundaries](docs/architecture.md)
 - [Hardware and firmware integration record](docs/hardware.md)

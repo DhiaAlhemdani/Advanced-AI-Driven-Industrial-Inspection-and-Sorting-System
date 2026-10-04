@@ -51,6 +51,17 @@ The thesis and uploaded firmware hashes are listed in [`artifact-inventory.md`](
 
 Compilation alone is not physical validation.
 
+## Rebuild the annotated thesis revision
+
+The original PDF is checksum-verified and never overwritten. To recreate the annotated 157-page revision:
+
+```bash
+python -m pip install -e ".[pdf]"
+python scripts/build_revised_thesis.py
+```
+
+The generator adds visible banners to affected source pages and appends the controlling correction record. Its human-readable source summary is [`thesis-revision-notes.md`](thesis-revision-notes.md). Regeneration must fail if the original PDF hash or page count changes.
+
 ## Result reproduction hierarchy
 
 1. **Artifact extraction:** rerun the CSV summary and verify hashes.
