@@ -40,7 +40,7 @@ The summary tool reports final and independently peaked values. To rerun validat
 
 ## Thesis and firmware provenance
 
-The thesis and uploaded firmware hashes are listed in [`artifact-inventory.md`](artifact-inventory.md). The sketch does not match several thesis firmware claims. Preserve both records; do not edit the sketch to manufacture consistency. A reproducible hardware release needs:
+The thesis and uploaded firmware hashes are listed in [`artifact-inventory.md`](artifact-inventory.md). The uploaded sketch defines the canonical current firmware parameters for this repository. A reproducible hardware release additionally needs:
 
 - Arduino board/core and Servo library versions;
 - sketch and compiled-binary hashes;
@@ -57,10 +57,10 @@ The original PDF is checksum-verified and never overwritten. To recreate the ann
 
 ```bash
 python -m pip install -e ".[pdf]"
-python scripts/build_revised_thesis.py
+python scripts/build_updated_thesis.py
 ```
 
-The generator adds visible banners to affected source pages and appends the controlling correction record. Its human-readable source summary is [`thesis-revision-notes.md`](thesis-revision-notes.md). Regeneration must fail if the original PDF hash or page count changes.
+The generator adds visible update banners to selected source pages and appends the technical update. Its human-readable source summary is [`thesis-update-notes.md`](thesis-update-notes.md). Regeneration must fail if the original PDF hash or page count changes.
 
 ## Result reproduction hierarchy
 

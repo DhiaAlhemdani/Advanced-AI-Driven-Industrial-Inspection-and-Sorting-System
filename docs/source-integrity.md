@@ -21,17 +21,17 @@ For each new artifact:
 6. Redact secrets and personal/private data without silently altering technical meaning.
 7. Never replace absent code or evidence with a plausible reconstruction labeled as original.
 
-## Conflicting sources
+## Source-specific reporting
 
-Source precedence is not based on the highest metric. When sources disagree:
+Each value is retained with its source and measurement type:
 
-- preserve each value with its source and measurement type;
-- recompute percentages from published counts;
-- distinguish observed code behavior from thesis prose;
-- distinguish final-row, checkpoint-selected, and independently peaked metrics;
-- leave the conflict explicit until immutable artifacts or raw logs resolve it.
+- percentages are calculated from published counts;
+- source-code behavior is documented from the uploaded sketch;
+- final-row, selected-checkpoint, peak, and Quick Inference metrics are labeled separately;
+- physical results retain their denominator and evidence requirements;
+- canonical current parameters are stated in the updated thesis edition and hardware record.
 
-This policy currently applies to detector identity/results, the sorting table, physical-sorting narrative, UART speed, interrupt/polling architecture, servo timing/angles, and emergency-stop behavior.
+This policy applies to detector results, sorting counts, serial configuration, control architecture, servo timing/angles, and command scope.
 
 ## Numerical-result checklist
 

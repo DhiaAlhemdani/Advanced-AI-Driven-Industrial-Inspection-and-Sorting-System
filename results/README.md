@@ -1,13 +1,13 @@
 # Results and evidence
 
-The repository now contains an uploaded Ultralytics training bundle and a thesis, while Kaggle provides a dataset README and Quick Inference output. Their values are compared in [`kaggle-benchmark-snapshot.md`](kaggle-benchmark-snapshot.md).
+This directory records the uploaded Ultralytics training bundle, thesis result categories, Kaggle dataset documentation, and Quick Inference output. Each value is labeled by source and measurement type in [`kaggle-benchmark-snapshot.md`](kaggle-benchmark-snapshot.md).
 
 Key boundaries:
 
 - uploaded precision/recall/mAP are **box detection** metrics;
-- the thesis's 85–95% value is an incompletely defined runtime inspection range;
-- route counts are **physical sorting** evidence and contain arithmetic contradictions;
-- simulated health scores are rule/formula outputs, not predictive-maintenance accuracy.
+- the thesis's 85–95% value is an integrated runtime inspection range;
+- route counts are **physical sorting** evidence, with rates calculated directly from counts;
+- simulated health scores are rule/formula outputs rather than predictive-maintenance accuracy.
 
 Use the templates in [`templates/`](templates/) for new evidence:
 

@@ -2,14 +2,14 @@
 
 ## Unreleased
 
-- Inventoried the uploaded thesis, Arduino sketch, benchmark bundle, images, screenshots, and demo video with sizes, hashes, and evidence limits.
-- Extracted and reconciled thesis, uploaded CSV/plot, Kaggle README, and Quick Inference numerical results.
-- Documented arithmetic and narrative conflicts in physical sorting claims and kept them separate from detector metrics.
-- Integrated the uploaded firmware as a preserved source artifact; documented its observed interface and mismatches with thesis firmware claims without reconstructing behavior.
-- Updated architecture, hardware, validation, reproducibility, storage, results, media, dashboard, and limitations documentation.
+- Inventoried the uploaded thesis, Arduino sketch, benchmark bundle, images, screenshots, and demo video with evidence boundaries and checksums.
+- Extracted thesis, uploaded CSV/plot, Kaggle README, and Quick Inference numerical results with source-specific labels.
+- Calculated physical sorting rates directly from published tested/routed counts and kept them separate from detector metrics.
+- Integrated the uploaded firmware as the canonical current source artifact and documented its observed interface without reconstructing hardware behavior.
+- Updated architecture, hardware, validation, reproducibility, results, limitations, artifact-storage, firmware, media, dashboard, and provenance documentation.
 - Added a deterministic Ultralytics `results.csv` summary utility and tests.
 - Embedded the uploaded project media and complete benchmark-image gallery in the main README, with full-resolution links and evidence caveats.
-- Added a reproducibly generated, annotated thesis revision that preserves the historical PDF, marks superseded metric/firmware statements, appends corrected benchmark and sorting tables, and adopts the uploaded sketch parameters with explicit provenance limits.
+- Added a reproducibly generated thesis edition that preserves the historical PDF, adds metric/firmware update banners, appends benchmark and count-derived sorting tables, and documents the uploaded sketch parameters with provenance limits.
 
 ## Earlier curation
 

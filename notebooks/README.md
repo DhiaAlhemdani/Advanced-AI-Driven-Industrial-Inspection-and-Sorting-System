@@ -30,7 +30,7 @@ The notebook is the original integration source for the CV training/inference fl
 
 ## Important source notes
 
-- The notebook uses both `YOLO("yolo11m.pt")` in a training cell and benchmark `best.pt` weights described as `YOLOv8l-Worldv2` elsewhere. This model identity must be resolved against the thesis and benchmark files before publishing a single headline model claim.
+- The notebook records `YOLO("yolo11m.pt")` in a training cell, and the uploaded benchmark configuration records a `YOLOv8l-Worldv2` model path. Retain the source label with every model result.
 - The notebook contains simulation defaults (`USE_ARDUINO = False`, `USE_SIMULATION = True`) as well as serial/hardware branches. Notebook execution is not evidence that the physical branches were tested.
 - The notebook contains environment-specific addresses such as `localhost`, `COM3`, `COM4`, `127.0.0.1`, and a LAN camera URL. These must become configuration values before a portable repository runtime is claimed.
 

@@ -7,14 +7,14 @@
 
 This repository documents a bottle inspection prototype combining object detection, rule-based/OpenCV checks, serially commanded Arduino actuation, a three-route conveyor concept, dashboard monitoring, and simulated predictive-maintenance telemetry.
 
-> **Evidence boundary:** the thesis, Arduino sketch, benchmark CSV/plots, photographs, screenshots, and demo video are now present and inventoried. Training images, labels, annotations, the original notebook, and model weights remain canonical on [Kaggle](https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system) and are intentionally not duplicated here. The uploaded sources disagree on several numerical and firmware details; this README reports the disagreement rather than silently selecting a headline value. The historical thesis remains unchanged, while an [annotated evidence-reconciled revision](docs/Project%20Research%20-%20Evidence-Reconciled%20Revision.pdf) visibly marks superseded claims and appends the controlling corrections.
+> **Evidence boundary:** the thesis, Arduino sketch, benchmark CSV/plots, photographs, screenshots, and demo video are present and inventoried. Training images, labels, annotations, the original notebook, and model weights remain canonical on [Kaggle](https://www.kaggle.com/datasets/dhiaalhemdani/industrial-inspection-system) and are intentionally not duplicated here. The historical thesis remains unchanged, while an [updated metrics and firmware edition](docs/Project%20Research%20-%20Updated%20Metrics%20and%20Firmware.pdf) adds the benchmark results, count-derived sorting rates, and uploaded firmware specification.
 
 ## Project record
 
 | Area | Available evidence |
 | --- | --- |
 | Dataset | 119 images: 95 train / 24 validation; classes `bottle`, `cap`, `label`, `liquid` (Kaggle version-10 record) |
-| Thesis | [Original historical PDF](docs/Project%20Research.pdf) plus [annotated evidence-reconciled revision](docs/Project%20Research%20-%20Evidence-Reconciled%20Revision.pdf) and [revision notes](docs/thesis-revision-notes.md) |
+| Thesis | [Original historical PDF](docs/Project%20Research.pdf) plus [updated metrics and firmware edition](docs/Project%20Research%20-%20Updated%20Metrics%20and%20Firmware.pdf) and [update notes](docs/thesis-update-notes.md) |
 | Detection bundle | 121-row Ultralytics `results.csv`, settings, curves, confusion matrices, and qualitative train/validation mosaics |
 | Physical evaluation | Thesis describes 245 bottles across five scenarios; no item-level route log is present |
 | Firmware | Owner-uploaded [`firmware/sketch_may1a.ino`](firmware/sketch_may1a.ino), preserved as supplied and documented separately |
@@ -59,11 +59,11 @@ If the repository viewer does not render embedded MP4 video, use the [direct vid
 | Uploaded CSV, best mAP@0.50:0.95 row (epoch 117) | 95.780% | 98.816% | 99.389% | 94.441% |
 | Kaggle Quick Inference, 24 images / 83 instances | 98.1% | 95.7% | 96.47% | 92.12% |
 
-The Kaggle README headline is consistent with rounded values selected from different CSV epochs (including peak recall 100%), while Quick Inference is a separate, lower-mAP validation run. The thesis's **85–95% inspection accuracy** is an integrated runtime range without a published denominator or standard detector definition. None of these values is physical sorting accuracy.
+The uploaded CSV table reports the final epoch and the checkpoint selected by mAP@0.50:0.95. Quick Inference is listed as its own 24-image, 83-instance evaluation. The thesis's **85–95% inspection accuracy** is retained as an integrated runtime range. These model and runtime results are documented separately from physical sorting accuracy.
 
 ### Physical sorting claims (route outcomes)
 
-Thesis Table 6:5 and the Kaggle README list 230 routed units out of 245. That arithmetic is **93.88%**, not the table's 95.00%. The fluid row lists 20/35, which is **57.14%**, not 62.00%. Elsewhere the thesis calls physical sorting “flawless” and claims 100%, conflicting with its own table. Without the item-level ledger, this repository does not certify a sorting-accuracy value.
+Using the counts in Thesis Table 6:5 and the Kaggle README, the documented count-derived rates are **230/245 = 93.88% overall** and **20/35 = 57.14% for SC-05**. The scenario counts and calculated percentages are shown together so the denominator is explicit. An item-level route ledger is still required for an independently repeatable physical sorting evaluation.
 
 | Measurement type | What it answers | Evidence required |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ Thesis Table 6:5 and the Kaggle README list 230 routed units out of 245. That ar
 | Physical sorting accuracy | Did each physical item arrive in the intended lane? | Dated item-level route ledger and hardware revision |
 | End-to-end latency | How long from item entry to completed routing? | Synchronized capture, command, sensor, and actuator timestamps |
 
-The full source-by-source reconciliation is in [`results/kaggle-benchmark-snapshot.md`](results/kaggle-benchmark-snapshot.md).
+The full source-specific results record is in [`results/kaggle-benchmark-snapshot.md`](results/kaggle-benchmark-snapshot.md).
 
 ## Benchmark gallery
 
@@ -140,7 +140,7 @@ The diagram separates the uploaded sketch's observable interface from broader th
 ├── firmware/                     uploaded Arduino sketch and observed contract
 ├── kaggle/benchmarks/            uploaded CSV/configuration/plots and image mosaics
 ├── media/                        project photo, screenshots, banner, and demo video
-├── results/                      cross-source reconciliation and evidence templates
+├── results/                      source-specific result records and evidence templates
 ├── src/industrial_inspection/    curated inventory/metric/benchmark utilities
 ├── scripts/                      Kaggle staging and benchmark-summary tools
 ├── tests/                        tests for curated Python utilities
@@ -174,22 +174,22 @@ Rebuild the annotated thesis copy from the checksum-verified original with:
 
 ```bash
 python -m pip install -e ".[pdf]"
-python scripts/build_revised_thesis.py
+python scripts/build_updated_thesis.py
 ```
 
 ## Documentation
 
-- [Original thesis](docs/Project%20Research.pdf) and [evidence-reconciled revision](docs/Project%20Research%20-%20Evidence-Reconciled%20Revision.pdf)
-- [Thesis revision notes and provenance](docs/thesis-revision-notes.md)
+- [Original thesis](docs/Project%20Research.pdf) and [updated metrics and firmware edition](docs/Project%20Research%20-%20Updated%20Metrics%20and%20Firmware.pdf)
+- [Thesis update notes and provenance](docs/thesis-update-notes.md)
 - [Artifact inventory](docs/artifact-inventory.md)
 - [Architecture and evidence boundaries](docs/architecture.md)
 - [Hardware and firmware integration record](docs/hardware.md)
 - [Validation protocol](docs/validation.md)
-- [Result reconciliation](results/kaggle-benchmark-snapshot.md)
+- [Source-specific results](results/kaggle-benchmark-snapshot.md)
 - [Limitations](docs/limitations.md)
 - [Reproducibility](docs/reproducibility.md)
 - [External artifact policy](docs/artifact-storage.md)
 
 ## Current limitations
 
-The validation split is small; model weights and exact notebook/environment are external; model identity differs across sources (`yolov8l-worldv2`, YOLO-World, and YOLOv11m); the physical route table is internally inconsistent; raw timing and item-level trial logs are absent; media is illustrative; and the uploaded firmware does not implement multiple behaviors attributed to firmware in the thesis. Predictive-maintenance values were generated through virtual sensing and are not field-failure prediction metrics.
+The validation split is small; model weights and the exact notebook/environment are external; the available records reference `yolov8l-worldv2`, YOLO-World, and YOLOv11m; raw timing and item-level trial logs are absent; and media is illustrative. The uploaded sketch defines the current firmware parameters documented in this repository. Predictive-maintenance values were generated through virtual sensing and are not field-failure prediction metrics.

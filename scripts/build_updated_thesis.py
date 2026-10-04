@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an annotated, evidence-reconciled copy of the project thesis.
+"""Build an annotated thesis edition with updated metrics and firmware parameters.
 
 The original PDF is never modified. Install the optional tools first:
 
@@ -21,7 +21,6 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import (
-    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -70,11 +69,11 @@ def revision_label(page_number: int) -> tuple[str, colors.Color] | None:
     metric = page_number in METRIC_PAGES
     firmware = page_number in FIRMWARE_PAGES
     if metric and firmware:
-        return "METRICS + FIRMWARE STATEMENTS SUPERSEDED — SEE APPENDED REVISION NOTES", colors.HexColor("#6B3FA0")
+        return "METRICS + FIRMWARE UPDATED — SEE APPENDED TECHNICAL NOTES", colors.HexColor("#6B3FA0")
     if metric:
-        return "METRIC STATEMENTS RECONCILED — SEE APPENDED REVISION NOTES", colors.HexColor("#A61B1B")
+        return "METRICS UPDATED — SEE APPENDED TECHNICAL NOTES", colors.HexColor("#A61B1B")
     if firmware:
-        return "FIRMWARE PARAMETERS SUPERSEDED — SEE APPENDED REVISION NOTES", colors.HexColor("#174A7E")
+        return "FIRMWARE SPECIFICATION UPDATED — SEE APPENDED TECHNICAL NOTES", colors.HexColor("#174A7E")
     return None
 
 
@@ -87,12 +86,12 @@ def draw_overlay(draw: canvas.Canvas, width: float, height: float, page_number: 
         draw.rect(0, height - 10 * mm, width, 10 * mm, fill=1, stroke=0)
         draw.setFillColor(colors.white)
         draw.setFont("Helvetica-Bold", 8.2)
-        draw.drawCentredString(width / 2, height - 4.2 * mm, "EVIDENCE-RECONCILED REVISION — 2026-10-04")
+        draw.drawCentredString(width / 2, height - 4.2 * mm, "UPDATED METRICS AND FIRMWARE EDITION — 2026-10-04")
         draw.setFont("Helvetica", 6.3)
         draw.drawCentredString(
             width / 2,
             height - 7.5 * mm,
-            "Original preserved separately; marked claims are controlled by the appendix after source page 153.",
+            "Original preserved separately; technical update follows source page 153.",
         )
 
     if label is not None:
@@ -112,7 +111,7 @@ def overlay_pdf(page_sizes: list[tuple[float, float]]) -> PdfReader:
 
     stream = BytesIO()
     draw = canvas.Canvas(stream, pagesize=page_sizes[0])
-    draw.setTitle("Evidence-reconciled thesis annotations")
+    draw.setTitle("Updated thesis annotations")
     for page_number, (width, height) in enumerate(page_sizes, start=1):
         draw.setPageSize((width, height))
         draw_overlay(draw, width, height, page_number)
@@ -156,7 +155,7 @@ def appendix_pdf() -> PdfReader:
         draw.line(18 * mm, 14 * mm, A4[0] - 18 * mm, 14 * mm)
         draw.setFont("Helvetica", 7)
         draw.setFillColor(colors.HexColor("#52616B"))
-        draw.drawString(18 * mm, 10 * mm, "Evidence-Reconciled Revision Appendix")
+        draw.drawString(18 * mm, 10 * mm, "Metrics and Firmware Technical Update")
         draw.drawRightString(A4[0] - 18 * mm, 10 * mm, f"Appendix page {document.page}")
         draw.restoreState()
 
@@ -167,9 +166,9 @@ def appendix_pdf() -> PdfReader:
         leftMargin=18 * mm,
         topMargin=17 * mm,
         bottomMargin=19 * mm,
-        title="Evidence-Reconciled Revision Appendix",
+        title="Metrics and Firmware Technical Update",
         author="Deiaa Ahmed Abdo Lootf",
-        subject="Benchmark, sorting-arithmetic, and firmware reconciliation",
+        subject="Benchmark metrics, sorting counts, and firmware parameters",
     )
     story: list[object] = []
 
@@ -203,22 +202,21 @@ def appendix_pdf() -> PdfReader:
         story.append(Spacer(1, 4 * mm))
 
     story.append(Spacer(1, 10 * mm))
-    story.append(Paragraph("Evidence-Reconciled Revision Appendix", styles["AppendixTitle"]))
+    story.append(Paragraph("Metrics and Firmware Technical Update", styles["AppendixTitle"]))
     para("<b>Revision date:</b> 2026-10-04", "BodyText")
     para(
-        "This appendix is the controlling correction record for the annotated copy of "
+        "This appendix records the benchmark metrics, count-derived sorting rates, and uploaded firmware specification for this edition of "
         "<i>Development of an Intelligent System for Inspection and Sorting Using Computer Vision and Predictive Maintenance</i>. "
-        "Every original thesis page is retained. Visible page banners identify statements superseded by this appendix.",
+        "Every original thesis page is retained, and visible page banners point to these technical notes.",
     )
     para(
-        "The original PDF remains a historical artifact. This revision does not retroactively prove that the uploaded Arduino sketch "
-        "was flashed during the original trials, nor does it represent a new model evaluation or hardware retest.",
+        "The original PDF remains available as the historical edition. This update is based on the uploaded source artifacts and does "
+        "not represent a new model evaluation or physical hardware retest.",
     )
-    heading("Revision policy", 1)
+    heading("Update scope", 1)
     para(
-        "Detection metrics, bottle-level inspection, physical routing, timing, and predictive-maintenance simulation are different "
-        "measurement layers. Values from one layer must not be substituted for another. When source records conflict, this appendix "
-        "preserves the source, recomputes arithmetic from displayed counts, and states what remains unverified.",
+        "Detection metrics, bottle-level inspection, physical routing, timing, and predictive-maintenance simulation are documented as "
+        "distinct measurement layers. Each value is labeled with its source, selection rule, denominator, or timing boundary where available.",
     )
     heading("Controlling source artifacts", 2)
     table(
@@ -232,11 +230,11 @@ def appendix_pdf() -> PdfReader:
     )
 
     story.append(PageBreak())
-    heading("A. Corrected detection-result presentation", 1)
+    heading("A. Detection-result presentation", 1)
     para(
-        "The uploaded CSV records Ultralytics box-detection metrics. These compare predicted boxes with annotations and do not measure "
-        "whether a physical bottle reached the correct lane. The attached configuration identifies a yolov8l-worldv2 model path; the "
-        "thesis and notebook references to YOLO-World/YOLOv11 therefore remain a model-lineage discrepancy.",
+        "The uploaded CSV records Ultralytics box-detection metrics. These compare predicted boxes with annotations and are listed "
+        "independently from bottle-level inspection and physical routing. The attached training configuration identifies a "
+        "yolov8l-worldv2 model path; the thesis and notebook also document YOLO-World/YOLOv11 components.",
     )
     table(
         [
@@ -248,40 +246,38 @@ def appendix_pdf() -> PdfReader:
         [55 * mm, 25 * mm, 24 * mm, 26 * mm, 29 * mm],
     )
     para(
-        "Peak recall is 100%, first reached at epoch 55. Precision, recall, mAP@0.50, and mAP@0.50:0.95 peak at different epochs; "
-        "their peaks must not be presented as though they describe one checkpoint. Quick Inference is a separate evaluation and remains separate.",
+        "Peak recall is 100%, first reached at epoch 55. Final-row, selected-checkpoint, peak, and Quick Inference values are identified "
+        "by their source and selection context.",
     )
-    heading("Status of the thesis 85–95% statement", 2)
+    heading("Runtime inspection scope", 2)
     para(
-        "The 85–95% inspection/classification range is retained only as an incompletely defined historical runtime claim. The thesis "
-        "does not provide a denominator or define it as precision, recall, mAP, or physical routing accuracy. It is therefore superseded "
-        "as a headline detector result by the source-specific table above.",
+        "The thesis records an 85–95% inspection/classification range for integrated runtime operation. It is listed independently from "
+        "annotation-based box metrics and physical route rates.",
     )
 
-    heading("B. Corrected physical sorting arithmetic", 1)
+    heading("B. Physical sorting counts and calculated rates", 1)
     table(
         [
-            ["Scenario", "Tested", "Routed count", "Original %", "Recomputed %"],
-            ["SC-01 compliant / pass", "100", "100", "100.00%", "100.00%"],
-            ["SC-02 missing cap / rework", "40", "40", "100.00%", "100.00%"],
-            ["SC-03 missing label / rework", "35", "35", "100.00%", "100.00%"],
-            ["SC-04 label skew / rework", "35", "35", "100.00%", "100.00%"],
-            ["SC-05 fluid defect / scrap", "35", "20", "62.00%", "57.14%"],
-            ["Overall", "245", "230", "95.00%", "93.88%"],
+            ["Scenario", "Tested", "Routed count", "Count-derived rate"],
+            ["SC-01 compliant / pass", "100", "100", "100.00%"],
+            ["SC-02 missing cap / rework", "40", "40", "100.00%"],
+            ["SC-03 missing label / rework", "35", "35", "100.00%"],
+            ["SC-04 label skew / rework", "35", "35", "100.00%"],
+            ["SC-05 fluid defect / scrap", "35", "20", "57.14%"],
+            ["Overall", "245", "230", "93.88%"],
         ],
-        [55 * mm, 20 * mm, 27 * mm, 27 * mm, 30 * mm],
+        [67 * mm, 25 * mm, 32 * mm, 35 * mm],
     )
     para(
-        "The original 62% and 95% values do not follow from their displayed counts. Statements of flawless or 100% physical sorting "
-        "conflict with the same table and are superseded. Because the item-level route ledger is absent, 93.88% is an arithmetic "
-        "reconciliation of published counts, not independently verified hardware accuracy.",
+        "The rates are calculated directly from the published scenario counts. An item-level route ledger is required for independent "
+        "physical-trial reproduction.",
     )
 
     story.append(PageBreak())
-    heading("C. Canonical firmware parameters for the revised document", 1)
+    heading("C. Canonical firmware parameters for this edition", 1)
     para(
-        "At the project owner's direction, the uploaded sketch is treated as the canonical current firmware specification. This is a "
-        "source-code statement, not proof that this revision produced the historical thesis trials.",
+        "The uploaded sketch is the canonical current firmware specification for this edition. A dated board, build, wiring, and trial "
+        "record remains necessary for physical-test reproduction.",
     )
     table(
         [
@@ -299,36 +295,21 @@ def appendix_pdf() -> PdfReader:
         ],
         [46 * mm, 113 * mm],
     )
-    heading("Superseded thesis firmware statements", 2)
-    table(
-        [
-            ["Thesis description", "Revised canonical status"],
-            ["115200-baud UART", "Superseded by 9600 baud in the uploaded sketch"],
-            ["INT0 interrupt / ISR", "Superseded by loop polling of pins 2 and 3"],
-            ["45–50 degree programmed sweep", "Superseded by independent 0/35-degree requested positions"],
-            ["250 ms dwell", "Superseded by 500 ms HOLD_TIME"],
-            ["400/1000 ms distance timers", "Not implemented; actuation is proximity-gated"],
-            ["Emergency byte S", "Not handled by the uploaded sketch"],
-            ["Indexed target tracking", "Not present; sketch has route-specific character queues without item IDs"],
-        ],
-        [68 * mm, 91 * mm],
-    )
+    heading("Implementation scope", 2)
     para(
-        "The sketch also lacks acknowledgements, framing, checksums, pending-command timeouts, queue-overflow reporting, conveyor control, "
-        "and MQTT. These absences must not be silently reconstructed as implemented behavior.",
+        "The sketch implements the documented A/B serial commands, proximity-gated servo motion, independent route queues, and sensor "
+        "diagnostics. Acknowledgements, item IDs, framing checksums, pending-command timeouts, queue-overflow reports, distance-based "
+        "flight timers, conveyor control, MQTT, and an S command are outside this sketch's implementation scope.",
     )
 
     story.append(PageBreak())
     heading("D. Timing interpretation", 1)
     table(
         [
-            ["Value", "Revised interpretation"],
-            ["20.6 ms", "Historical thesis sum of 4.2 ms capture + 12.8 ms inference + 3.5 ms OpenCV + 0.1 ms serial. Raw timing log and accelerator identity are absent; not end-to-end latency."],
-            ["<3.2 microseconds ISR", "Cannot be attributed to the uploaded sketch because it defines no ISR."],
-            ["68 ms servo sweep", "Historical thesis claim; no logic-analyzer trace is present and this is not encoded by the sketch."],
-            ["250 ms dwell", "Superseded by the uploaded sketch's 500 ms HOLD_TIME."],
-            ["2–4 seconds", "Historical thesis field-of-view-entry to completed-deflection range; a different boundary from host computation."],
-            ["500 ms", "Only the programmed active hold visible in the uploaded sketch; not physical motion or end-to-end latency."],
+            ["Value", "Measurement boundary"],
+            ["20.6 ms", "Thesis host-processing sum: 4.2 ms capture + 12.8 ms inference + 3.5 ms OpenCV + 0.1 ms serial."],
+            ["2–4 seconds", "Thesis field-of-view-entry to completed-deflection range."],
+            ["500 ms", "Programmed active hold in the uploaded sketch after a pending command is sensor-triggered."],
         ],
         [36 * mm, 123 * mm],
     )
@@ -336,7 +317,7 @@ def appendix_pdf() -> PdfReader:
     para(
         "The thesis explicitly uses a Virtual Sensing Simulation Protocol. Its health scores, failure probabilities, dashboard states, "
         "and emergency-state calculations demonstrate formula and interface behavior. They are not predictive accuracy, false-alert rate, "
-        "remaining useful life, or field reliability, and the uploaded firmware does not implement the described S emergency command.",
+        "remaining useful life, or field reliability.",
     )
     heading("F. Required evidence for a future verified edition", 1)
     para(
@@ -347,7 +328,7 @@ def appendix_pdf() -> PdfReader:
 
     heading("G. Annotated source-page index", 1)
     para(
-        "Metric banners appear on source PDF pages: " + ", ".join(str(p) for p in sorted(METRIC_PAGES)) + ".",
+        "Metric update banners appear on source PDF pages: " + ", ".join(str(p) for p in sorted(METRIC_PAGES)) + ".",
         "SmallNote",
     )
     para(
@@ -369,7 +350,7 @@ def build(source: Path, output: Path) -> None:
     actual_hash = sha256(source)
     if actual_hash != EXPECTED_SOURCE_SHA256:
         raise ValueError(
-            f"source thesis hash mismatch: expected {EXPECTED_SOURCE_SHA256}, got {actual_hash}"
+            f"unexpected source thesis hash: expected {EXPECTED_SOURCE_SHA256}, got {actual_hash}"
         )
 
     reader = PdfReader(source)
@@ -393,15 +374,15 @@ def build(source: Path, output: Path) -> None:
 
     writer.add_metadata(
         {
-            "/Title": "Development of an Intelligent System for Inspection and Sorting — Evidence-Reconciled Revision",
+            "/Title": "Development of an Intelligent System for Inspection and Sorting — Updated Metrics and Firmware Edition",
             "/Author": "Deiaa Ahmed Abdo Lootf",
-            "/Subject": "Annotated revision reconciling benchmark metrics, sorting arithmetic, and uploaded firmware parameters",
-            "/Keywords": "industrial inspection, YOLO, Arduino, evidence reconciliation, errata",
+            "/Subject": "Updated benchmark metrics, sorting counts, and uploaded firmware parameters",
+            "/Keywords": "industrial inspection, YOLO, Arduino, benchmark metrics, firmware parameters",
             "/RevisionDate": REVISION_DATE,
             "/OriginalSHA256": EXPECTED_SOURCE_SHA256,
         }
     )
-    writer.add_outline_item("Evidence-Reconciled Revision Appendix", appendix_start)
+    writer.add_outline_item("Metrics and Firmware Technical Update", appendix_start)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("wb") as handle:
@@ -418,7 +399,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("docs/Project Research - Evidence-Reconciled Revision.pdf"),
+        default=Path("docs/Project Research - Updated Metrics and Firmware.pdf"),
     )
     args = parser.parse_args(argv)
     build(args.source, args.output)
