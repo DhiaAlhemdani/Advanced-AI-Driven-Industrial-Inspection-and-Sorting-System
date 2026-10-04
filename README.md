@@ -22,7 +22,7 @@ This repository is being curated as an evidence-first engineering showcase for a
 | Project contribution | Computer vision and system integration, as declared by the project owner |
 | Validation policy | Detection performance and physical sorting accuracy are reported separately |
 
-The dataset facts above are the project facts currently supplied for this repository. Run the included dataset-report utility against the downloaded Kaggle export to regenerate a machine-readable manifest before adding benchmark claims.
+The dataset facts above are now also documented in Kaggle version 10. Run the included dataset-report utility against the downloaded export to regenerate a machine-readable manifest before adding benchmark claims.
 
 ## Engineering profile
 
@@ -47,14 +47,16 @@ flowchart LR
     M --> K
 ```
 
-The diagram is an architectural view, not a wiring diagram or a claim about the exact original topic names, GPIO pins, model, thresholds, or controller protocol. Those details belong to the original implementation and thesis evidence.
+The diagram is an architectural view, not a wiring diagram or a claim about the exact original GPIO pins, firmware, or hardware-test result. Notebook-derived MQTT topics and heuristic thresholds are documented in [`docs/architecture.md`](docs/architecture.md) and remain source configuration until reconciled with the thesis and raw logs.
 
 ## What is in this repository
 
-- **`docs/`** — architecture, reproducibility, hardware integration contract, validation protocol, limitations, and source-provenance rules.
+- **`docs/`** — architecture, reproducibility, hardware integration contract, validation protocol, limitations, artifact storage, and source-provenance rules.
 - **`src/industrial_inspection/`** — small, dependency-light utilities for dataset inventory and metric calculations. These are curation/reproducibility utilities, not a reconstruction of the original hardware implementation.
-- **`src/vision/`, `src/control/`, `src/monitoring/`** — clearly separated homes for the original CV, embedded-integration, and monitoring files when they are supplied.
-- **`firmware/`, `dashboard/`, `models/`, `data/`, `results/`** — artifact boundaries with instructions and evidence templates; no secrets, raw datasets, or invented firmware are committed.
+- **`src/vision/`, `src/control/`, `src/monitoring/`** — clearly separated homes for the original CV, embedded-integration, and monitoring files when the exact notebook export is preserved and split.
+- **`kaggle/` and `notebooks/`** — provenance snapshots and the exact-source workflow for the public Kaggle dataset/notebook.
+- **`firmware/`, `dashboard/`, `models/`, `data/`, `results/`, `media/`** — artifact boundaries with instructions and evidence templates; no secrets, raw images, weights, or invented firmware are committed.
+- **`scripts/fetch_kaggle_artifacts.py`** — reproducible ingestion of the notebook, annotations, labels, YAML, CSV, and benchmark artifacts when the Kaggle CLI is available.
 - **`.github/workflows/ci.yml`** — checks the reproducibility utilities only; it does not simulate or certify physical hardware.
 
 ## Reproduce the dataset inventory
@@ -85,7 +87,7 @@ Three measurements must remain separate:
 2. **Physical sorting accuracy** — correct routing decisions divided by physically inspected items, taken from a trial log with the route/bin definition stated.
 3. **End-to-end yield or availability** — a system-level measure that also records missed detections, jams, latency, communication loss, and maintenance events.
 
-The repository includes CSV templates for these evidence types under [`results/templates/`](results/templates/). Until the thesis and benchmark logs are available, the result tables intentionally contain no invented values.
+The repository includes CSV templates for these evidence types under [`results/templates/`](results/templates/). The currently published Kaggle values and their unresolved discrepancies are captured in [`results/kaggle-benchmark-snapshot.md`](results/kaggle-benchmark-snapshot.md); they are not silently promoted to final thesis results.
 
 ## Project map
 
@@ -93,8 +95,11 @@ The repository includes CSV templates for these evidence types under [`results/t
 .
 ├── README.md
 ├── data/                         # local-only dataset instructions
+├── kaggle/                       # small source/config snapshots from Kaggle
+├── notebooks/                    # original notebook provenance and fetch workflow
 ├── docs/
 │   ├── architecture.md
+│   ├── artifact-storage.md
 │   ├── hardware.md
 │   ├── limitations.md
 │   ├── reproducibility.md
@@ -102,7 +107,9 @@ The repository includes CSV templates for these evidence types under [`results/t
 │   └── validation.md
 ├── firmware/                     # original firmware boundary; no reconstructed code
 ├── models/                       # model provenance and export instructions
-├── results/                      # evidence policy and blank result templates
+├── results/                      # evidence policy, templates, and Kaggle audit
+├── scripts/                      # reproducible Kaggle artifact ingestion
+├── media/                        # owner-uploaded demo/hardware media boundary
 ├── src/
 │   ├── control/                  # original integration/control files when supplied
 │   ├── industrial_inspection/    # reproducibility utilities
@@ -114,6 +121,6 @@ The repository includes CSV templates for these evidence types under [`results/t
 
 ## Limitations and next evidence drop
 
-The current public evidence supports the dataset description and system-level architecture only. To make the repository a complete reproducible implementation, add the original source files and cite them in [`docs/source-integrity.md`](docs/source-integrity.md), then add the thesis and raw benchmark logs. The required fields and acceptance checks are documented in [`docs/validation.md`](docs/validation.md).
+The current public evidence supports the dataset description, the Kaggle notebook's declared architecture, and the captured configuration snapshots. The benchmark values currently published by Kaggle contain unresolved discrepancies, documented in [`results/kaggle-benchmark-snapshot.md`](results/kaggle-benchmark-snapshot.md). To make the repository a complete reproducible implementation, preserve the exact notebook export, ingest the non-media Kaggle artifacts, add the thesis and raw benchmark logs, and then split/test the original code. The required fields and acceptance checks are documented in [`docs/validation.md`](docs/validation.md).
 
-For the full engineering narrative, start with [`docs/architecture.md`](docs/architecture.md) and [`docs/reproducibility.md`](docs/reproducibility.md).
+For the full engineering narrative, start with [`docs/architecture.md`](docs/architecture.md), [`docs/reproducibility.md`](docs/reproducibility.md), and [`notebooks/README.md`](notebooks/README.md).
