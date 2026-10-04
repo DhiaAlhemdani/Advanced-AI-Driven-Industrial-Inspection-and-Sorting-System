@@ -45,4 +45,4 @@ Before publishing a result, identify:
 - denominator, exclusions, raw log, and arithmetic check;
 - corresponding limitations.
 
-The uploaded benchmark CSV passes artifact extraction, but not independent model reproduction. The thesis physical table fails arithmetic/narrative consistency checks and lacks the item ledger.
+The uploaded benchmark CSV passes artifact extraction, but not independent model reproduction. The updated physical table presents count-derived rates, while independent physical reproduction still requires the item-level ledger.

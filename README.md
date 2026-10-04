@@ -131,7 +131,7 @@ flowchart LR
     PM --> T
 ```
 
-The diagram separates the uploaded sketch's observable interface from broader thesis/notebook claims. It is not a wiring diagram. In particular, the sketch uses polling, 9600 baud, 500 ms hold time, and commands `A`/`B`; it does not contain the thesis-described interrupt routine, 115200-baud setting, 20/50 cm flight timers, conveyor emergency-stop command, or acknowledgements. See [`docs/architecture.md`](docs/architecture.md) and [`docs/hardware.md`](docs/hardware.md).
+The diagram documents the current uploaded-sketch interface; it is not a wiring diagram. The firmware specification uses polling, 9600 baud, a 500 ms hold time, commands `A`/`B`, proximity pins 2/3, and servo pins 9/10. Acknowledgements, item identifiers, distance-based flight timers, conveyor control, MQTT, and an `S` command are outside this sketch's implementation scope. See [`docs/architecture.md`](docs/architecture.md) and [`docs/hardware.md`](docs/hardware.md).
 
 ## Repository map
 
