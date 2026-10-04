@@ -1,0 +1,70 @@
+{
+  "basic": {
+    "project": "D:\\xanylabeling_data\\trainer\\ultralytics\\runs\\segment\\detect",
+    "name": "exp93",
+    "model": "C:/PythonProject/yolov8l-worldv2.pt",
+    "data": "C:/PythonProject/yolo_dataset_seg - Copy/data.yaml",
+    "device": "cuda",
+    "dataset_ratio": 0.8,
+    "pose_config": ""
+  },
+  "train": {
+    "epochs": 200,
+    "batch": 4,
+    "imgsz": 640,
+    "workers": 6,
+    "single_cls": false,
+    "classes": null
+  },
+  "strategy": {
+    "time": 1.0,
+    "patience": 150,
+    "close_mosaic": 10,
+    "optimizer": "AdamW",
+    "cos_lr": true,
+    "amp": true,
+    "multi_scale": true
+  },
+  "learning_rate": {
+    "lr0": 1e-05,
+    "lrf": 0.1,
+    "momentum": 0.937,
+    "weight_decay": 0.0005
+  },
+  "warmup": {
+    "warmup_epochs": 3.0,
+    "warmup_momentum": 0.8,
+    "warmup_bias_lr": 0.1
+  },
+  "augment": {
+    "hsv_h": 0.0,
+    "hsv_s": 0.0,
+    "hsv_v": 0.0,
+    "degrees": 0.0,
+    "translate": 0.0,
+    "scale": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0
+  },
+  "regularization": {
+    "dropout": 0.0,
+    "fraction": 1.0,
+    "rect": false
+  },
+  "loss_weights": {
+    "box": 6.5,
+    "cls": 0.5,
+    "dfl": 1.5,
+    "pose": 12.0,
+    "kobj": 1.0
+  },
+  "checkpoint": {
+    "save_period": 20,
+    "val": true,
+    "plots": true,
+    "save": true,
+    "resume": false,
+    "cache": true,
+    "skip_empty_files": true
+  }
+}
